@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 **Environment (please complete the following information):**
  - OS: [e.g. macOS, Windows]
  - Node Version: [e.g. 18.x]
- - OfficeParser Version [e.g. 6.0.0]
+ - Docstream Version [e.g. 0.1.1]
 
 **Additional context**
 Add any other context about the problem here.
