@@ -1,6 +1,9 @@
 # Workflow: Build, Test & Publish to npm
 # Triggered when a GitHub Release is published (draft → published).
 # Flow: checkout → install → test → build → attach bundle → publish to npm
+#
+# Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret needed.
+# Configure at: https://www.npmjs.com/package/@jose.espana/docstream/access
 
 name: Build and Publish
 
@@ -10,7 +13,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
   id-token: write
 
 jobs:
@@ -26,6 +28,7 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: npm ci
@@ -49,17 +52,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          npm publish --access public
-
-      - name: Publish to GitHub Packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm pkg set name="@joseespana/docstream"
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          npm publish --registry=https://npm.pkg.github.com/
+      - name: Publish to npm (Trusted Publishing / OIDC)
+        run: npm publish --provenance --access public
