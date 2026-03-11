@@ -1,15 +1,10 @@
-# Workflow Name: Create Draft Release
-# This workflow performs the following tasks:
-# - Monitors pushes to the master branch specifically for package.json changes
-# - Extracts the current version from package.json
-# - Compares the extracted version against the latest Git tag
-# - If a version increment is detected, it automatically prepares a Draft Release on GitHub
-# - Generates a comparison link in the release body to show the delta since the last version
+# Workflow: Create Draft Release
+# Monitors pushes to master for package.json version changes.
+# If version bumped, creates a Draft Release on GitHub.
+# Publishing that draft triggers the build-and-publish workflow.
 
 name: Create Draft Release
 
-# Trigger Events:
-# Runs only when package.json is updated on the master branch
 on:
   push:
     branches:
@@ -17,44 +12,33 @@ on:
     paths:
       - "package.json"
 
-# Job Permissions:
-# - contents: write (Required to create a release in the repository)
 permissions:
   contents: write
 
 jobs:
-  # Job to detect version shifts and initialize the release drafting process
   version-check-and-release:
-    # Safely skip if the event is somehow not a push (extra validation)
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the code with full history for tag detection
-      - name: Checkout Repository Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Step 2: Extract current version and find the previous tag for comparison
       - name: Get Package Version and Latest Tag
         id: version
         run: |
-          # Read version from package.json using jq
           NEW_VERSION=$(jq -r '.version' package.json)
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          
-          # Retrieve the most recent tag matching the 'v*' pattern
+
           LAST_TAG=$(git tag -l "v*" --sort=-v:refname | head -n 1)
           LAST_VERSION=${LAST_TAG#v}
-          # Default to 0.0.0 if no tags exist yet
           echo "last_version=${LAST_VERSION:-0.0.0}" >> $GITHUB_OUTPUT
-          
-          # Generate a formatted date for the release header
-          echo "date=$(date +'%d.%m.%Y')" >> $GITHUB_OUTPUT
+
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         shell: bash
 
-      # Step 3: Instantiate a Draft Release if a new version is detected
       - name: Create Draft GitHub Release
         if: steps.version.outputs.new_version != steps.version.outputs.last_version
         uses: softprops/action-gh-release@v2
@@ -62,8 +46,14 @@ jobs:
           tag_name: v${{ steps.version.outputs.new_version }}
           name: "v${{ steps.version.outputs.new_version }}"
           body: |
-            # v${{ steps.version.outputs.new_version }} - ${{ steps.version.outputs.date }}
-            ## Changes: [v${{ steps.version.outputs.last_version }}..v${{ steps.version.outputs.new_version }}](https://github.com/${{ github.repository }}/compare/v${{ steps.version.outputs.last_version }}..v${{ steps.version.outputs.new_version }})
+            # v${{ steps.version.outputs.new_version }} — ${{ steps.version.outputs.date }}
+
+            ## Changes
+            [v${{ steps.version.outputs.last_version }}...v${{ steps.version.outputs.new_version }}](https://github.com/${{ github.repository }}/compare/v${{ steps.version.outputs.last_version }}...v${{ steps.version.outputs.new_version }})
+
+            ## What's New
+            <!-- Edit this section before publishing the release -->
+
           draft: true
           prerelease: false
         env:

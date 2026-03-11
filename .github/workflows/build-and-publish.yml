@@ -1,69 +1,47 @@
-# Workflow Name: Build and Publish
-# This workflow performs the following tasks:
-# - Checkout out repository code and sets up Node.js environment
-# - Installs dependencies and runs comprehensive tests
-# - Builds the project (TSC) and generates the browser bundle (ESBuild)
-# - Creates a versioned bundle file and attaches it as a release asset
-# - Publishes the library to the npm registry
-# - Publishes the library to GitHub Packages registry under the @harshankur scope
+# Workflow: Build, Test & Publish to npm
+# Triggered when a GitHub Release is published (draft → published).
+# Flow: checkout → install → test → build → attach bundle → publish to npm
 
 name: Build and Publish
 
-# Trigger Events:
-# This workflow is triggered specifically when a new release is published on GitHub
 on:
   release:
     types: [published]
 
-# Job Permissions:
-# - contents: write (Required to upload release assets)
-# - packages: write (Required to publish to GitHub Packages)
-# - id-token: write (Required for secure publishing flows)
 permissions:
   contents: write
   packages: write
   id-token: write
 
 jobs:
-  # Single job handling both build and publication to ensure atomicity
   build-and-publish:
-    # Use the latest Ubuntu runner for consistent build performance
     runs-on: ubuntu-latest
-    
+
     steps:
-      # Step 1: Check out the code to the runner
-      - name: Checkout Repository Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Initialize Node.js environment with caching for performance
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      # Step 3: Clean install dependencies based on package-lock.json
       - name: Install Dependencies
         run: npm ci
 
-      # Step 4: Run the full test suite to ensure release stability
-      # The workflow will pause and fail here if any test fails
       - name: Run Tests
         run: npm test
 
-      # Step 5: Build artifacts and generate versioned browser bundle
-      # We extract the version from the tag (e.g., v6.0.0 -> 6.0.0)
-      # Then rename the generic browser dist for the release asset
       - name: Build and Bundle
         run: |
           npm run build
           VERSION=${{ github.event.release.tag_name }}
           VERSION_CLEAN=${VERSION#v}
-          BUNDLE_NAME="officeParserBundle@$VERSION_CLEAN.js"
+          BUNDLE_NAME="docstream.browser@$VERSION_CLEAN.js"
           cp dist/officeparser.browser.js "dist/$BUNDLE_NAME"
           echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
 
-      # Step 6: Attach the versioned .js bundle to the GitHub Release
       - name: Upload Bundle as Release Asset
         uses: softprops/action-gh-release@v2
         with:
@@ -71,8 +49,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 7: Push the package to npmjs.com
-      # Uses local .npmrc configuration to avoid global credentials leakage
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -80,12 +56,10 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           npm publish --access public
 
-      # Step 8: Push the package to GitHub Packages (ghcr.io compatibility)
-      # Temporarily modifies the package name to follow @harshankur scope
       - name: Publish to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm pkg set name="@harshankur/officeparser"
+          npm pkg set name="@joseespana/docstream"
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           npm publish --registry=https://npm.pkg.github.com/
