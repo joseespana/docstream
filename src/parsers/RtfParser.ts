@@ -42,6 +42,7 @@
 
 import { ImageMetadata, ListMetadata, NoteMetadata, OfficeAttachment, OfficeContentNode, OfficeMimeType, OfficeParserAST, OfficeParserConfig, TextFormatting } from '../types';
 import { logWarning } from '../utils/errorUtils';
+import { astToMarkdown } from '../utils/markdownUtils';
 import { performOcr } from '../utils/ocrUtils';
 
 /**
@@ -1744,7 +1745,8 @@ export const parseRtf = async (buffer: Buffer, config: OfficeParserConfig): Prom
                     text += (config.newlineDelimiter ?? '\n') + notes.map(c => c.text).join(config.newlineDelimiter ?? '\n');
                 }
                 return text;
-            }
+            },
+            toMarkdown: () => astToMarkdown(content, config)
         };
 
         // If putNotesAtLast is true, append notes to the end of the content array

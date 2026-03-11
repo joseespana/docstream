@@ -1,7 +1,7 @@
 {
-  "name": "officeparser",
-  "version": "6.0.4",
-  "description": "A robust, strictly-typed Node.js and Browser library for parsing office files (.docx, .pptx, .xlsx, .odt, .odp, .ods, .pdf, .rtf) into structured AST with rich metadata, formatting, and attachment support.",
+  "name": "@jose.espana/docstream",
+  "version": "0.1.1",
+  "description": "A universal Node.js & Browser library to parse any office document — legacy or modern — into plain text, structured AST or Markdown. Supports DOCX, XLSX, PPTX, ODT, ODS, ODP, PDF, RTF and legacy formats DOC, XLS, PPT. Built for AI pipelines, RAG systems and document processing workflows.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
@@ -9,8 +9,13 @@
     "node": ">=18.0.0"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc && node build_browser.js && npm run sync:docs",
     "build:node": "tsc",
@@ -24,47 +29,38 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harshankur/officeParser.git"
+    "url": "https://github.com/joseespana/docstream.git"
   },
   "bin": "dist/index.js",
   "keywords": [
-    "office",
+    "docstream",
+    "document-parser",
+    "office-parser",
+    "markdown",
     "docx",
-    "pptx",
     "xlsx",
+    "pptx",
+    "doc",
+    "xls",
+    "ppt",
     "odt",
-    "odp",
-    "ods",
     "pdf",
     "rtf",
-    "parser",
-    "text extraction",
-    "document parser",
-    "word",
-    "excel",
-    "powerpoint",
-    "spreadsheet",
-    "presentation",
-    "slides",
     "ast",
-    "ocr",
-    "typescript",
+    "legacy-office",
+    "rag",
+    "llm",
+    "text-extraction",
+    "nodejs",
     "browser",
-    "metadata",
-    "formatting",
-    "attachments",
-    "tesseract",
-    "pdf.js",
-    "structured-data",
-    "openoffice",
-    "libreoffice"
+    "typescript"
   ],
-  "author": "Harsh Ankur",
+  "author": "jose.espana",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/harshankur/officeParser/issues"
+    "url": "https://github.com/joseespana/docstream/issues"
   },
-  "homepage": "https://harshankur.github.io/officeParser/",
+  "homepage": "https://github.com/joseespana/docstream#readme",
   "dependencies": {
     "@xmldom/xmldom": "^0.8.10",
     "concat-stream": "^2.0.0",

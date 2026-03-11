@@ -1,0 +1,26 @@
+# Reference libraries (olefile, Apache POI) — ~515MB, never publish
+ref/
+
+# Source code (only dist/ is published)
+src/
+test/
+
+# Build tooling
+build_browser.js
+tsconfig.json
+.husky/
+
+# IDE and editor
+.idea/
+.vscode/
+.claude/
+
+# GitHub
+.github/
+
+# Documentation site (served separately)
+docs/
+
+# Development files
+CLAUDE.md
+*.tgz

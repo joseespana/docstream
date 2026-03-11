@@ -20,6 +20,7 @@ import {
     CellMetadata, OfficeContentNode, OfficeParserAST,
     OfficeParserConfig, SheetMetadata, TextFormatting
 } from '../../types';
+import { astToMarkdown } from '../../utils/markdownUtils';
 import { parseOLE2 } from './ole2';
 
 // ============================================================================
@@ -740,6 +741,7 @@ export async function parseXls(fileBuffer: Buffer, config: Required<OfficeParser
                 .filter(t => t !== '')
                 .join(delimiter);
         },
+        toMarkdown: () => astToMarkdown(content, config),
     };
 
     return ast;

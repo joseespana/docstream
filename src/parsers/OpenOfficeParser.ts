@@ -22,6 +22,7 @@
  */
 
 import { CellMetadata, ChartData, ChartMetadata, HeadingMetadata, ImageMetadata, ListMetadata, NoteMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, SheetMetadata, SlideMetadata, SupportedFileType, TextFormatting, TextMetadata } from '../types';
+import { astToMarkdown } from '../utils/markdownUtils';
 import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
@@ -1479,6 +1480,7 @@ export const parseOpenOffice = async (buffer: Buffer, config: OfficeParserConfig
                 return t;
             };
             return getText(c);
-        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n')
+        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n'),
+        toMarkdown: () => astToMarkdown(content, config)
     };
 };

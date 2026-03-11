@@ -24,6 +24,7 @@
 
 import { XMLSerializer } from '@xmldom/xmldom';
 import { ChartMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, SlideMetadata, TextFormatting } from '../types';
+import { astToMarkdown } from '../utils/markdownUtils';
 import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
@@ -840,6 +841,7 @@ export const parsePowerPoint = async (buffer: Buffer, config: OfficeParserConfig
                 return t;
             };
             return getText(c);
-        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n')
+        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n'),
+        toMarkdown: () => astToMarkdown(content, config)
     };
 };

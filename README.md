@@ -19,14 +19,16 @@ A universal Node.js & Browser library to parse any office document — legacy or
 | OpenDocument Presentation | `.odp` | Modern |
 | PDF | `.pdf` | Modern |
 | Rich Text Format | `.rtf` | Legacy |
-| Word 97-2003 | `.doc` | Legacy (planned) |
-| Excel 97-2003 | `.xls` | Legacy (planned) |
-| PowerPoint 97-2003 | `.ppt` | Legacy (planned) |
+| Word 97-2003 | `.doc` | Legacy |
+| Excel 97-2003 | `.xls` | Legacy |
+| PowerPoint 97-2003 | `.ppt` | Legacy |
+
+> **Note on accuracy:** Document conversion is inherently imperfect. While docstream strives for high-fidelity extraction, no parser can guarantee 100% accuracy across all document variations. Formatting, layout, and content may differ slightly from the original — especially for complex documents, legacy formats (DOC, XLS, PPT), and PDF files. Results are designed to be readable and usable for text extraction, search indexing, RAG pipelines, and AI workflows, but should not be considered pixel-perfect reproductions of the source documents.
 
 ## Install
 
 ```bash
-npm i docstream
+npm i @jose.espana/docstream
 ```
 
 ## Command Line Usage
@@ -49,6 +51,7 @@ npx docstream /path/to/officeFile.docx --ignoreNotes=true --newlineDelimiter=" "
 | Option | Description |
 |--------|-------------|
 | `--toText=[true\|false]` | Output plain text instead of JSON AST |
+| `--toMarkdown=[true\|false]` | Output Markdown instead of JSON AST |
 | `--ignoreNotes=[true\|false]` | Ignore notes (e.g. PowerPoint speaker notes). Default: `false` |
 | `--newlineDelimiter=[delimiter]` | Delimiter for new lines. Default: `\n` |
 | `--putNotesAtLast=[true\|false]` | Collect notes at end of document. Default: `false` |
@@ -62,7 +65,7 @@ npx docstream /path/to/officeFile.docx --ignoreNotes=true --newlineDelimiter=" "
 ### Getting Started (Async/Await)
 
 ```js
-const docstream = require('docstream');
+const docstream = require('@jose.espana/docstream');
 
 async function parseMyFile() {
     try {
@@ -96,7 +99,7 @@ console.log(text);
 Callbacks are supported for backward compatibility. The data returned is the AST object.
 
 ```js
-const docstream = require('docstream');
+const docstream = require('@jose.espana/docstream');
 
 docstream.parseOffice("/path/to/officeFile.docx", function(ast, err) {
     if (err) {
@@ -113,7 +116,7 @@ You can pass a file path string, a Node.js `Buffer`, or an `ArrayBuffer`.
 
 ```js
 const fs = require('fs');
-const docstream = require('docstream');
+const docstream = require('@jose.espana/docstream');
 const buffer = fs.readFileSync("/path/to/officeFile.pdf");
 
 docstream.parseOffice(buffer)
@@ -296,17 +299,44 @@ console.log(`Extracted ${ast.attachments.length} images`);
 
 ## Markdown Output
 
-The `toMarkdown()` method on the AST result converts the parsed document into clean Markdown, preserving headings, lists, tables, bold/italic formatting, images (as references), and footnotes.
+Every `parseOffice()` result includes a `toMarkdown()` method that converts the parsed document into clean, readable Markdown. This works with **all 11 supported formats** — modern, legacy, and PDF.
+
+### Basic Usage
 
 ```js
-const docstream = require('docstream');
+const docstream = require('@jose.espana/docstream');
 
 const ast = await docstream.parseOffice("report.docx");
 const markdown = ast.toMarkdown();
 console.log(markdown);
 ```
 
-Output:
+### CLI
+
+```bash
+npx docstream /path/to/file.docx --toMarkdown=true
+```
+
+### What Gets Converted
+
+| Element | Markdown Output |
+|---------|----------------|
+| Headings (H1-H6) | `# Heading` / `## Subheading` |
+| Bold / Italic / Bold-Italic | `**bold**` / `*italic*` / `***both***` |
+| Underline | `<u>text</u>` |
+| Strikethrough | `~~text~~` |
+| Superscript / Subscript | `<sup>text</sup>` / `<sub>text</sub>` |
+| Ordered & unordered lists | `1. item` / `- item` (with nesting) |
+| Tables | Pipe-delimited with header separator |
+| Images | `![alt](filename)` |
+| Charts | `[Chart: Title]` with data summary |
+| Links | `[text](url)` |
+| Footnotes & endnotes | `[^note-id]: content` |
+| Slides (PPTX/ODP) | `---` separators + `### Slide N` headings |
+| Sheets (XLSX/ODS) | `## SheetName` headings |
+| Pages (PDF) | `<!-- Page N -->` comments |
+
+### Example Output
 
 ```markdown
 # Introduction
@@ -323,9 +353,18 @@ This is the **first paragraph** with *italic text* and a [link](https://example.
 |-------|-------|
 | Alice | 95    |
 | Bob   | 87    |
+
+[^1]: This is a footnote.
 ```
 
-`toMarkdown()` works with all supported formats. Combined with `extractAttachments: true`, image nodes are rendered as `![alt](attachment-name)` references.
+### One-Liner for AI / RAG Pipelines
+
+```js
+const toMarkdown = async (file) => (await docstream.parseOffice(file)).toMarkdown();
+
+// Feed directly to an LLM
+const context = await toMarkdown("quarterly-report.pdf");
+```
 
 ## Legacy Format Support
 
@@ -347,7 +386,7 @@ console.log(ast2.content); // Tables with rows and cells
 **Search for a term (TypeScript)**
 
 ```ts
-import { OfficeParser } from 'docstream';
+import { OfficeParser } from '@jose.espana/docstream';
 
 async function hasSearchTerm(filePath: string, term: string): Promise<boolean> {
     const ast = await OfficeParser.parseOffice(filePath);
@@ -358,7 +397,7 @@ async function hasSearchTerm(filePath: string, term: string): Promise<boolean> {
 **Extract images with OCR**
 
 ```js
-const docstream = require('docstream');
+const docstream = require('@jose.espana/docstream');
 
 const config = { extractAttachments: true, ocr: true };
 docstream.parseOffice("presentation.pptx", config).then(ast => {
@@ -440,7 +479,7 @@ console.log("Document Notes:", allNotes);
 
 ## Browser Usage
 
-The browser bundle exposes the `officeParser` namespace. Include the bundle file from the release assets.
+The browser bundle exposes the **docstream** namespace. Include the bundle file from the release assets.
 
 ```html
 <script src="dist/officeparser.browser.js"></script>
@@ -448,7 +487,7 @@ The browser bundle exposes the `officeParser` namespace. Include the bundle file
     async function handleFile(file) {
         // file: a File object from <input> or an ArrayBuffer
         try {
-            const ast = await officeParser.parseOffice(file, { ocr: true });
+            const ast = await docstream.parseOffice(file, { ocr: true });
             console.log(ast.toText());
             console.log("Metadata:", ast.metadata);
         } catch (error) {
@@ -464,10 +503,10 @@ When parsing PDFs in the browser, you can provide `pdfWorkerSrc` in the config. 
 
 ```js
 // Uses default CDN worker
-const ast = await officeParser.parseOffice(file);
+const ast = await docstream.parseOffice(file);
 
 // Override with your own path
-const ast2 = await officeParser.parseOffice(file, {
+const ast2 = await docstream.parseOffice(file, {
     pdfWorkerSrc: "https://unpkg.com/pdfjs-dist@5.4.530/build/pdf.worker.min.mjs"
 });
 ```
@@ -484,19 +523,19 @@ const ast2 = await officeParser.parseOffice(file, {
 
 - [x] DOCX, XLSX, PPTX, ODF, PDF, RTF parsing (from officeParser)
 - [x] AST output with metadata, formatting and attachments
-- [ ] Markdown output (`toMarkdown()`)
-- [ ] Legacy `.doc` support (Word 97-2003 Binary)
-- [ ] Legacy `.xls` support (Excel BIFF8)
-- [ ] Legacy `.ppt` support (PowerPoint 97-2003 Binary)
-- [ ] Fix: `process is not defined` in browser environments ([issue #67](https://github.com/harshankur/officeParser/issues/67))
-- [ ] Fix: background process leak on top-level require ([issue #59](https://github.com/harshankur/officeParser/issues/59))
-- [ ] Page numbers in Word documents ([issue #71](https://github.com/harshankur/officeParser/issues/71))
+- [x] Markdown output (`toMarkdown()`)
+- [x] Legacy `.doc` support (Word 97-2003 Binary)
+- [x] Legacy `.xls` support (Excel BIFF8)
+- [x] Legacy `.ppt` support (PowerPoint 97-2003 Binary)
+- [ ] Fix: `process is not defined` in browser environments ([issue #67](https://github.com/joseespana/docstream/issues/67))
+- [ ] Fix: background process leak on top-level require ([issue #59](https://github.com/joseespana/docstream/issues/59))
+- [ ] Page numbers in Word documents ([issue #71](https://github.com/joseespana/docstream/issues/71))
 
 ## Credits & References
 
 This project builds on the work of several open-source projects and specifications:
 
-- **[officeParser](https://github.com/harshankur/officeParser)** by harshankur — The original parser this project is forked from. Provides DOCX, XLSX, PPTX, ODF, PDF, and RTF parsing with AST output. (MIT)
+- Originally forked from **[officeParser](https://github.com/harshankur/officeParser)** by harshankur — The original parser that provides DOCX, XLSX, PPTX, ODF, PDF, and RTF parsing with AST output. (MIT)
 - **[mammoth.js](https://github.com/mwilliamson/mammoth.js)** by mwilliamson — DOCX to semantic HTML conversion, referenced for the Markdown output pipeline. (MIT)
 - **[turndown](https://github.com/mixmark-io/turndown)** by mixmark-io — HTML to Markdown conversion engine. (MIT)
 - **[markitdown](https://github.com/microsoft/markitdown)** by Microsoft — Modular document converter architecture, used as design inspiration. (MIT)
