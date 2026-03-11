@@ -688,4 +688,18 @@ export interface OfficeParserAST {
      * ```
      */
     toText(): string;
+
+    /**
+     * Converts the entire AST to Markdown text.
+     * This method transforms the document structure into well-formatted Markdown,
+     * preserving headings, lists, tables, inline formatting, links, images, and notes.
+     *
+     * @returns A Markdown representation of the document
+     * @example
+     * ```typescript
+     * const md = ast.toMarkdown();
+     * console.log(md); // "# Heading\n\nParagraph text\n\n- list item\n..."
+     * ```
+     */
+    toMarkdown(): string;
 }

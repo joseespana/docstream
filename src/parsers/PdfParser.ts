@@ -59,6 +59,7 @@
 
 import { ImageMetadata, OfficeAttachment, OfficeContentNode, OfficeMetadata, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
 import { getOfficeError, logWarning, OfficeErrorType } from '../utils/errorUtils';
+import { astToMarkdown } from '../utils/markdownUtils';
 import { createAttachment } from '../utils/imageUtils';
 import { performOcr } from '../utils/ocrUtils';
 
@@ -885,7 +886,8 @@ export const parsePdf = async (buffer: Buffer, config: OfficeParserConfig): Prom
         metadata: metadata,
         content: content,
         attachments: attachments,
-        toText: () => content.map(c => c.text).join(config.newlineDelimiter ?? '\n\n')
+        toText: () => content.map(c => c.text).join(config.newlineDelimiter ?? '\n\n'),
+        toMarkdown: () => astToMarkdown(content, config)
     };
 };
 

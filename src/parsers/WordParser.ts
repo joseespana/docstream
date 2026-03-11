@@ -66,6 +66,7 @@ import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
 import { performOcr } from '../utils/ocrUtils';
 import { getDirectChildren, getElementsByTagName, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
+import { astToMarkdown } from '../utils/markdownUtils';
 import { extractFiles } from '../utils/zipUtils';
 
 /**
@@ -888,7 +889,8 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
                 return t;
             };
             return getText(c);
-        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n')
+        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n'),
+        toMarkdown: () => astToMarkdown(content, config)
     };
 };
 

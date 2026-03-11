@@ -22,6 +22,7 @@ import {
     HeadingMetadata, ListMetadata, NoteMetadata, OfficeContentNode,
     OfficeParserAST, OfficeParserConfig, TextFormatting
 } from '../../types';
+import { astToMarkdown } from '../../utils/markdownUtils';
 import { parseOLE2 } from './ole2';
 
 // ============================================================================
@@ -65,6 +66,8 @@ interface FIB {
     lcbPlcfbtePapx: number;
     fcPlcfbteChpx: number;  // Character properties bin table
     lcbPlcfbteChpx: number;
+    fcSttbfFfn: number;     // Font table (STTB of font family names)
+    lcbSttbfFfn: number;
     fcPlcffndRef: number;   // Footnote references
     lcbPlcffndRef: number;
     fcPlcffndTxt: number;   // Footnote text positions
@@ -146,6 +149,7 @@ function parseFIB(mainStream: Buffer): FIB {
     const [fcPlcffndTxt, lcbPlcffndTxt] = readFcLcb(3);   // PLCFFNDTXT: Footnote text
     const [fcPlcfbteChpx, lcbPlcfbteChpx] = readFcLcb(12); // PLCFBTECHPX: CHPX bin table
     const [fcPlcfbtePapx, lcbPlcfbtePapx] = readFcLcb(13); // PLCFBTEPAPX: PAPX bin table
+    const [fcSttbfFfn, lcbSttbfFfn] = readFcLcb(39);  // STTBFFFN: Font table
     const [fcClx, lcbClx] = readFcLcb(33);            // CLX: Complex File Table (piece table)
     const [fcPlcfendRef, lcbPlcfendRef] = readFcLcb(46);  // PLCFENDREF: Endnote refs
     const [fcPlcfendTxt, lcbPlcfendTxt] = readFcLcb(47);  // PLCFENDTXT: Endnote text
@@ -159,6 +163,7 @@ function parseFIB(mainStream: Buffer): FIB {
         fcStshf, lcbStshf,
         fcPlcfbtePapx, lcbPlcfbtePapx,
         fcPlcfbteChpx, lcbPlcfbteChpx,
+        fcSttbfFfn, lcbSttbfFfn,
         fcPlcffndRef, lcbPlcffndRef,
         fcPlcffndTxt, lcbPlcffndTxt,
         fcPlcfendRef, lcbPlcfendRef,
@@ -186,9 +191,9 @@ interface TextPiece {
  * The CLX contains the piece table that maps character positions to
  * byte positions in the WordDocument stream.
  *
- * @returns Array of text pieces and the reconstructed full document text
+ * @returns Object with full text and the text pieces (needed for FC-to-CP mapping)
  */
-function parseTextPieces(tableStream: Buffer, fib: FIB, mainStream: Buffer): string {
+function parseTextPieces(tableStream: Buffer, fib: FIB, mainStream: Buffer): { text: string; pieces: TextPiece[] } {
     if (fib.lcbClx === 0) {
         // No CLX = simple document, text starts right after FIB
         // Read from beginning of text in main stream
@@ -196,13 +201,13 @@ function parseTextPieces(tableStream: Buffer, fib: FIB, mainStream: Buffer): str
         // But typically all text is right after the FIB
         // Use ccpText to determine length
         const totalCcp = fib.ccpText + fib.ccpFtn + fib.ccpHdd + fib.ccpAtn + fib.ccpEdn;
-        if (totalCcp === 0) return '';
+        if (totalCcp === 0) return { text: '', pieces: [] };
 
         // In simple mode, try reading as ANSI from after FIB
         // The FIB is at least 68 bytes, but the actual text offset varies
         // For BIFF8/Word97, text typically starts at 0x800 (2048) in the main stream
         // But this is unreliable. Without CLX, we fall back to scanning
-        return '';
+        return { text: '', pieces: [] };
     }
 
     const clxStart = fib.fcClx;
@@ -235,7 +240,7 @@ function parseTextPieces(tableStream: Buffer, fib: FIB, mainStream: Buffer): str
     // So n = (pcdtSize - 4) / 12
     const numPieces = Math.floor((pcdtSize - 4) / 12);
 
-    if (numPieces <= 0) return '';
+    if (numPieces <= 0) return { text: '', pieces: [] };
 
     // Read CP array (n+1 entries)
     const cps: number[] = [];
@@ -288,7 +293,7 @@ function parseTextPieces(tableStream: Buffer, fib: FIB, mainStream: Buffer): str
         }
     }
 
-    return text;
+    return { text, pieces };
 }
 
 // ============================================================================
@@ -378,9 +383,9 @@ function parseStylesheet(tableStream: Buffer, fib: FIB): StyleEntry[] {
 // ============================================================================
 
 interface ParagraphInfo {
-    /** Start character position */
+    /** Start file character position (FC) or character position (CP) after mapping */
     cpStart: number;
-    /** End character position */
+    /** End file character position (FC) or character position (CP) after mapping */
     cpEnd: number;
     /** Style index */
     istd: number;
@@ -580,6 +585,466 @@ function parseParagraphProperties(
 }
 
 // ============================================================================
+// Font Table (SttbfFfn) Parsing
+// ============================================================================
+
+/**
+ * Parse the font table (SttbfFfn) from the table stream.
+ * Returns an array of font family names indexed by font index.
+ */
+function parseFontTable(tableStream: Buffer, fib: FIB): string[] {
+    const fonts: string[] = [];
+
+    if (fib.lcbSttbfFfn === 0 || fib.fcSttbfFfn + fib.lcbSttbfFfn > tableStream.length) {
+        return fonts;
+    }
+
+    let pos = fib.fcSttbfFfn;
+    const end = pos + fib.lcbSttbfFfn;
+
+    // SttbfFfn is an STTB (String Table) with extra data per entry.
+    // Header: cData (2 bytes) = count of entries, cbExtra (2 bytes) = extra data per string (0 for SttbfFfn)
+    if (pos + 4 > end) return fonts;
+
+    const cData = tableStream.readUInt16LE(pos);
+    pos += 2;
+    const cbExtra = tableStream.readUInt16LE(pos);
+    pos += 2;
+
+    // Each entry in the SttbfFfn is an FFN structure:
+    // cbFfnM1 (1 byte) = total size of FFN minus 1
+    // Then the FFN data: prq+fTrueType+ff (1 byte), wWeight (2 bytes), chs (1 byte),
+    // ixchSzAlt (1 byte), panose (10 bytes), fs (24 bytes) = 39 bytes fixed part
+    // Then the font name as a null-terminated Unicode string
+    for (let i = 0; i < cData && pos < end; i++) {
+        const cbFfnM1 = tableStream.readUInt8(pos);
+        const ffnStart = pos + 1;
+        const ffnEnd = ffnStart + cbFfnM1;
+
+        if (ffnEnd > end) break;
+
+        // Skip the fixed-size FFN fields (39 bytes) to get to the font name
+        const nameStart = ffnStart + 39;
+        if (nameStart >= ffnEnd) {
+            fonts.push('');
+            pos = ffnEnd + 1 + cbExtra;
+            continue;
+        }
+
+        // Font name is a null-terminated UTF-16LE string
+        let nameEnd = nameStart;
+        while (nameEnd + 1 < ffnEnd) {
+            const ch = tableStream.readUInt16LE(nameEnd);
+            if (ch === 0) break;
+            nameEnd += 2;
+        }
+
+        const fontName = tableStream.subarray(nameStart, nameEnd).toString('utf16le');
+        fonts.push(fontName);
+
+        pos = ffnEnd + 1 + cbExtra;
+    }
+
+    return fonts;
+}
+
+// ============================================================================
+// Character Properties (CHPX) Parsing
+// ============================================================================
+
+/** Character formatting range with FC positions */
+interface CharacterRun {
+    /** File character position start */
+    fcStart: number;
+    /** File character position end */
+    fcEnd: number;
+    /** Extracted text formatting */
+    formatting: TextFormatting;
+}
+
+// Character SPRM opcodes (from MS-DOC spec)
+const SPRM_CF_BOLD      = 0x0835;  // sprmCFBold - toggle bold
+const SPRM_CF_ITALIC    = 0x0836;  // sprmCFItalic - toggle italic
+const SPRM_CF_STRIKE    = 0x0837;  // sprmCFStrike - toggle strikethrough
+const SPRM_CF_SMALLCAPS = 0x083A;  // sprmCFSmallCaps
+const SPRM_CF_CAPS      = 0x083B;  // sprmCFCaps
+const SPRM_C_KUL        = 0x2A3E;  // sprmCKul - underline type
+const SPRM_C_HPS        = 0x4A43;  // sprmCHps - font size in half-points (word)
+const SPRM_C_ICO        = 0x2A42;  // sprmCIco - color index (byte)
+const SPRM_C_RG_FTC0    = 0x4A4F;  // sprmCRgFtc0 - ASCII font index (word)
+const SPRM_C_RG_FTC1    = 0x4A50;  // sprmCRgFtc1 - East Asian font index
+const SPRM_C_RG_FTC2    = 0x4A51;  // sprmCRgFtc2 - non-East-Asian font index
+const SPRM_CF_SUBSCRIPT = 0x0835;  // We'll handle sub/superscript via sprmCIss
+const SPRM_C_ISS        = 0x2A48;  // sprmCIss - superscript/subscript (byte: 0=normal, 1=super, 2=sub)
+
+/** Word color index (ICO) to hex color mapping */
+const ICO_COLORS: string[] = [
+    '#000000', // 0 - auto/default (black)
+    '#000000', // 1 - black
+    '#0000FF', // 2 - blue
+    '#00FFFF', // 3 - cyan
+    '#00FF00', // 4 - green
+    '#FF00FF', // 5 - magenta
+    '#FF0000', // 6 - red
+    '#FFFF00', // 7 - yellow
+    '#FFFFFF', // 8 - white
+    '#000080', // 9 - dark blue
+    '#008080', // 10 - dark cyan
+    '#008000', // 11 - dark green
+    '#800080', // 12 - dark magenta
+    '#800000', // 13 - dark red
+    '#808000', // 14 - dark yellow
+    '#808080', // 15 - dark gray
+    '#C0C0C0', // 16 - light gray
+];
+
+/**
+ * Parse the Character Properties Bin Table (PlcBteChpx) to get
+ * character formatting runs with their file-character positions.
+ */
+function parseCharacterProperties(
+    fib: FIB,
+    mainStream: Buffer,
+    tableStream: Buffer,
+    fontTable: string[]
+): CharacterRun[] {
+    const runs: CharacterRun[] = [];
+
+    if (fib.lcbPlcfbteChpx === 0) return runs;
+    if (fib.fcPlcfbteChpx + fib.lcbPlcfbteChpx > tableStream.length) return runs;
+
+    // PlcBteChpx is a PLCF: (n+1) FCs (4 bytes each) + n PnBteChpx (4 bytes each)
+    // Total size = (n+1)*4 + n*4 = 8n + 4
+    // n = (size - 4) / 8
+    const plcSize = fib.lcbPlcfbteChpx;
+    const numEntries = Math.floor((plcSize - 4) / 8);
+    if (numEntries <= 0) return runs;
+
+    const plcStart = fib.fcPlcfbteChpx;
+
+    // Read FC array
+    const fcs: number[] = [];
+    for (let i = 0; i <= numEntries; i++) {
+        fcs.push(tableStream.readUInt32LE(plcStart + i * 4));
+    }
+
+    // Read page numbers (PnBteChpx)
+    const pageNumOffset = plcStart + (numEntries + 1) * 4;
+
+    for (let i = 0; i < numEntries; i++) {
+        const pageNum = tableStream.readUInt32LE(pageNumOffset + i * 4);
+        const pageOffset = pageNum * 512;
+
+        if (pageOffset + 512 > mainStream.length) continue;
+
+        // Parse the ChpxFkp (Formatted Disk Page for character properties)
+        // Last byte of the FKP = crun (number of runs)
+        const crun = mainStream.readUInt8(pageOffset + 511);
+
+        // FKP layout for CHPX:
+        // - (crun+1) FCs (4 bytes each) at start
+        // - crun 1-byte offsets (each is offset*2 into page to find CHPX)
+        // Note: CHPX BX entries are 1 byte each (not 13 like PAPX)
+        for (let j = 0; j < crun; j++) {
+            const fcFirst = mainStream.readUInt32LE(pageOffset + j * 4);
+            const fcLim = mainStream.readUInt32LE(pageOffset + (j + 1) * 4);
+
+            // BX offset byte is at (crun+1)*4 + j
+            const bxPos = pageOffset + (crun + 1) * 4 + j;
+            if (bxPos >= pageOffset + 512) continue;
+
+            const chpxOffsetInPage = mainStream.readUInt8(bxPos) * 2;
+            if (chpxOffsetInPage === 0) {
+                // No CHPX data, default formatting
+                continue;
+            }
+
+            const chpxPos = pageOffset + chpxOffsetInPage;
+            if (chpxPos >= pageOffset + 512) continue;
+
+            // CHPX: first byte is cb (count of bytes in grpprl)
+            const cb = mainStream.readUInt8(chpxPos);
+            if (cb === 0) continue;
+
+            const sprmEnd = Math.min(chpxPos + 1 + cb, pageOffset + 512, mainStream.length);
+            let sprmPos = chpxPos + 1;
+
+            const formatting: TextFormatting = {};
+            let hasFormatting = false;
+
+            while (sprmPos + 2 <= sprmEnd) {
+                const sprm = mainStream.readUInt16LE(sprmPos);
+                const sprmType = (sprm >> 13) & 0x07;
+
+                // Determine SPRM operand size (same logic as PAPX)
+                let operandSize: number;
+                switch (sprmType) {
+                    case 0: operandSize = 1; break;  // Toggle
+                    case 1: operandSize = 1; break;  // Byte
+                    case 2: operandSize = 2; break;  // Word
+                    case 3: operandSize = 4; break;  // Dword
+                    case 4: operandSize = 2; break;  // Word
+                    case 5: operandSize = 2; break;  // Word
+                    case 6: // Variable
+                        if (sprmPos + 3 <= sprmEnd) {
+                            operandSize = mainStream.readUInt8(sprmPos + 2) + 1;
+                        } else {
+                            operandSize = 1;
+                        }
+                        break;
+                    case 7: operandSize = 3; break;  // 3 bytes
+                    default: operandSize = 1;
+                }
+
+                sprmPos += 2;  // Past the sprm id
+
+                // Extract formatting based on SPRM opcode
+                if (sprm === SPRM_CF_BOLD && sprmPos < sprmEnd) {
+                    const val = mainStream.readUInt8(sprmPos);
+                    if (val !== 0 && val !== 0x80) {  // 0x80 = toggle off
+                        formatting.bold = true;
+                        hasFormatting = true;
+                    }
+                }
+                else if (sprm === SPRM_CF_ITALIC && sprmPos < sprmEnd) {
+                    const val = mainStream.readUInt8(sprmPos);
+                    if (val !== 0 && val !== 0x80) {
+                        formatting.italic = true;
+                        hasFormatting = true;
+                    }
+                }
+                else if (sprm === SPRM_CF_STRIKE && sprmPos < sprmEnd) {
+                    const val = mainStream.readUInt8(sprmPos);
+                    if (val !== 0 && val !== 0x80) {
+                        formatting.strikethrough = true;
+                        hasFormatting = true;
+                    }
+                }
+                else if (sprm === SPRM_C_KUL && sprmPos < sprmEnd) {
+                    const val = mainStream.readUInt8(sprmPos);
+                    if (val !== 0) {
+                        formatting.underline = true;
+                        hasFormatting = true;
+                    }
+                }
+                else if (sprm === SPRM_C_HPS && sprmPos + 2 <= sprmEnd) {
+                    const halfPoints = mainStream.readUInt16LE(sprmPos);
+                    if (halfPoints > 0) {
+                        formatting.size = `${halfPoints / 2}pt`;
+                        hasFormatting = true;
+                    }
+                }
+                else if (sprm === SPRM_C_ICO && sprmPos < sprmEnd) {
+                    const icoIndex = mainStream.readUInt8(sprmPos);
+                    if (icoIndex > 0 && icoIndex < ICO_COLORS.length) {
+                        formatting.color = ICO_COLORS[icoIndex];
+                        hasFormatting = true;
+                    }
+                }
+                else if (sprm === SPRM_C_RG_FTC0 && sprmPos + 2 <= sprmEnd) {
+                    const fontIndex = mainStream.readUInt16LE(sprmPos);
+                    if (fontIndex < fontTable.length && fontTable[fontIndex]) {
+                        formatting.font = fontTable[fontIndex];
+                        hasFormatting = true;
+                    }
+                }
+                else if (sprm === SPRM_C_ISS && sprmPos < sprmEnd) {
+                    const val = mainStream.readUInt8(sprmPos);
+                    if (val === 1) {
+                        formatting.superscript = true;
+                        hasFormatting = true;
+                    } else if (val === 2) {
+                        formatting.subscript = true;
+                        hasFormatting = true;
+                    }
+                }
+
+                sprmPos += operandSize;
+            }
+
+            if (hasFormatting) {
+                runs.push({
+                    fcStart: fcFirst,
+                    fcEnd: fcLim,
+                    formatting,
+                });
+            }
+        }
+    }
+
+    // Sort by start position
+    runs.sort((a, b) => a.fcStart - b.fcStart);
+    return runs;
+}
+
+/**
+ * Convert CHPX character runs (keyed by file-character position) to a map
+ * keyed by character position (CP) using the piece table.
+ *
+ * Returns a sorted array of { cpStart, cpEnd, formatting } ranges.
+ */
+interface CpFormattingRange {
+    cpStart: number;
+    cpEnd: number;
+    formatting: TextFormatting;
+}
+
+function mapChpxToCp(
+    charRuns: CharacterRun[],
+    textPieces: TextPiece[]
+): CpFormattingRange[] {
+    const cpRanges: CpFormattingRange[] = [];
+
+    for (const run of charRuns) {
+        // For each character run, find which text pieces it overlaps with
+        for (const piece of textPieces) {
+            const bytesPerChar = piece.unicode ? 2 : 1;
+            const pieceByteStart = piece.fileOffset;
+            const pieceByteEnd = piece.fileOffset + (piece.cpEnd - piece.cpStart) * bytesPerChar;
+
+            // Check if this run overlaps with this piece
+            if (run.fcStart >= pieceByteEnd || run.fcEnd <= pieceByteStart) {
+                continue;
+            }
+
+            // Calculate overlap in file offsets
+            const overlapStart = Math.max(run.fcStart, pieceByteStart);
+            const overlapEnd = Math.min(run.fcEnd, pieceByteEnd);
+
+            // Convert file offsets to character positions
+            const cpStart = piece.cpStart + Math.floor((overlapStart - pieceByteStart) / bytesPerChar);
+            const cpEnd = piece.cpStart + Math.floor((overlapEnd - pieceByteStart) / bytesPerChar);
+
+            if (cpEnd > cpStart) {
+                cpRanges.push({
+                    cpStart,
+                    cpEnd,
+                    formatting: run.formatting,
+                });
+            }
+        }
+    }
+
+    cpRanges.sort((a, b) => a.cpStart - b.cpStart);
+    return cpRanges;
+}
+
+/**
+ * Convert PAPX paragraph info (keyed by file-character position) to CP-based
+ * positions using the piece table. This is necessary because PlcBtePapx FKP
+ * pages store FC (file character offsets), not CP (character positions).
+ */
+function mapPapxToCp(
+    papxInfo: ParagraphInfo[],
+    textPieces: TextPiece[]
+): ParagraphInfo[] {
+    const cpParagraphs: ParagraphInfo[] = [];
+
+    for (const para of papxInfo) {
+        // For each PAPX entry, find which text pieces it overlaps with
+        for (const piece of textPieces) {
+            const bytesPerChar = piece.unicode ? 2 : 1;
+            const pieceByteStart = piece.fileOffset;
+            const pieceByteEnd = piece.fileOffset + (piece.cpEnd - piece.cpStart) * bytesPerChar;
+
+            // Check if this PAPX run overlaps with this piece
+            if (para.cpStart >= pieceByteEnd || para.cpEnd <= pieceByteStart) {
+                continue;
+            }
+
+            // Calculate overlap in file offsets
+            const overlapStart = Math.max(para.cpStart, pieceByteStart);
+            const overlapEnd = Math.min(para.cpEnd, pieceByteEnd);
+
+            // Convert file offsets to character positions
+            const cpStart = piece.cpStart + Math.floor((overlapStart - pieceByteStart) / bytesPerChar);
+            const cpEnd = piece.cpStart + Math.floor((overlapEnd - pieceByteStart) / bytesPerChar);
+
+            if (cpEnd > cpStart) {
+                cpParagraphs.push({
+                    ...para,
+                    cpStart,
+                    cpEnd,
+                });
+            }
+        }
+    }
+
+    cpParagraphs.sort((a, b) => a.cpStart - b.cpStart);
+    return cpParagraphs;
+}
+
+/**
+ * Split a paragraph's text into formatted runs based on CHPX ranges.
+ * Returns an array of text nodes, each with their formatting.
+ */
+function splitIntoFormattedRuns(
+    text: string,
+    paragraphCpStart: number,
+    cpRanges: CpFormattingRange[]
+): OfficeContentNode[] {
+    if (cpRanges.length === 0 || text.length === 0) {
+        return [{ type: 'text', text }];
+    }
+
+    const paragraphCpEnd = paragraphCpStart + text.length;
+
+    // Find overlapping ranges for this paragraph
+    const overlapping: CpFormattingRange[] = [];
+    for (const range of cpRanges) {
+        if (range.cpStart >= paragraphCpEnd) break;
+        if (range.cpEnd <= paragraphCpStart) continue;
+        overlapping.push(range);
+    }
+
+    if (overlapping.length === 0) {
+        return [{ type: 'text', text }];
+    }
+
+    // Build runs by splitting at formatting boundaries
+    const children: OfficeContentNode[] = [];
+    let pos = 0;
+
+    for (const range of overlapping) {
+        const rangeStartInPara = Math.max(0, range.cpStart - paragraphCpStart);
+        const rangeEndInPara = Math.min(text.length, range.cpEnd - paragraphCpStart);
+
+        // Add unformatted text before this range
+        if (rangeStartInPara > pos) {
+            const unformattedText = text.substring(pos, rangeStartInPara);
+            if (unformattedText) {
+                children.push({ type: 'text', text: unformattedText });
+            }
+        }
+
+        // Add formatted text
+        const startIdx = Math.max(pos, rangeStartInPara);
+        if (startIdx < rangeEndInPara) {
+            const formattedText = text.substring(startIdx, rangeEndInPara);
+            if (formattedText) {
+                children.push({
+                    type: 'text',
+                    text: formattedText,
+                    formatting: range.formatting,
+                });
+            }
+        }
+
+        pos = Math.max(pos, rangeEndInPara);
+    }
+
+    // Add any remaining unformatted text
+    if (pos < text.length) {
+        const remaining = text.substring(pos);
+        if (remaining) {
+            children.push({ type: 'text', text: remaining });
+        }
+    }
+
+    return children.length > 0 ? children : [{ type: 'text', text }];
+}
+
+// ============================================================================
 // Main Parser
 // ============================================================================
 
@@ -611,7 +1076,7 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
     const tableStream = ole2.getStream(tableStreamName);
 
     // 4. Extract document text via piece table
-    const fullText = parseTextPieces(tableStream, fib, mainStream);
+    const { text: fullText, pieces: textPieces } = parseTextPieces(tableStream, fib, mainStream);
 
     if (fullText.length === 0) {
         return {
@@ -620,11 +1085,17 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
             content: [],
             attachments: [],
             toText: () => '',
+            toMarkdown: () => '',
         };
     }
 
     // 5. Parse stylesheet for heading detection
     const styles = parseStylesheet(tableStream, fib);
+
+    // 5a. Parse font table and character properties (CHPX)
+    const fontTable = parseFontTable(tableStream, fib);
+    const charRuns = parseCharacterProperties(fib, mainStream, tableStream, fontTable);
+    const cpFormattingRanges = mapChpxToCp(charRuns, textPieces);
 
     // Helper to check if a style is a heading and get its level
     function getHeadingLevel(istd: number): number | undefined {
@@ -633,6 +1104,11 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
         if (!style || !style.name) return undefined;
 
         const name = style.name.toLowerCase().replace(/\0/g, '');
+
+        // Exclude TOC, list, and other non-heading styles
+        if (name.startsWith('toc') || name.includes('list') || name.includes('footnote') || name.includes('endnote')) {
+            return undefined;
+        }
 
         // Check for "heading N" pattern (English)
         const match = name.match(/^heading\s*(\d+)$/);
@@ -645,10 +1121,7 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
         if (name === 'title') return 1;
         if (name === 'subtitle') return 2;
 
-        // Check parent style chain
-        if (style.baseStyle !== 0xFFF && style.baseStyle !== istd && style.baseStyle < styles.length) {
-            return getHeadingLevel(style.baseStyle);
-        }
+        // Do NOT follow parent chain — only explicit heading/title styles should be headings
 
         return undefined;
     }
@@ -682,11 +1155,11 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
         ? fullText.substring(endnoteStart, endnoteStart + fib.ccpEdn - 1)
         : '';
 
-    // 7. Parse paragraph properties for PAPX info
-    const papxInfo = parseParagraphProperties(tableStream, mainStream, fib, mainText.length);
+    // 7. Parse paragraph properties for PAPX info (FC-based) and convert to CP
+    const papxInfoRaw = parseParagraphProperties(tableStream, mainStream, fib, mainText.length);
+    const papxInfo = mapPapxToCp(papxInfoRaw, textPieces);
 
     // Build a map from character position → PAPX info
-    // For simplicity, we'll match paragraphs by scanning for \r (0x0D) in the text
     const content: OfficeContentNode[] = [];
     const notes: OfficeContentNode[] = [];
 
@@ -699,39 +1172,42 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
     let currentListId = '';
     let currentListIndex = 0;
 
-    // Split main text into paragraphs at paragraph marks
+    // Split main text into paragraphs at paragraph marks, tracking CP positions
     const paragraphTexts: string[] = [];
+    const paragraphCpStarts: number[] = [];
     let paraStart = 0;
     for (let i = 0; i < mainText.length; i++) {
         const ch = mainText.charCodeAt(i);
         if (ch === PARA_MARK || ch === CELL_MARK) {
+            paragraphCpStarts.push(paraStart);
             paragraphTexts.push(mainText.substring(paraStart, i));
             paraStart = i + 1;
         }
     }
     // Last segment
     if (paraStart < mainText.length) {
+        paragraphCpStarts.push(paraStart);
         paragraphTexts.push(mainText.substring(paraStart));
     }
 
-    // Match paragraphs with PAPX info (simplified: use style index at each paragraph position)
-    let cpPosition = 0;
-    let papxIdx = 0;
-
-    for (const paraText of paragraphTexts) {
+    // Match paragraphs with PAPX info using CP positions.
+    // Use a fresh search for each paragraph since PAPX entries after FC→CP mapping
+    // may have complex overlapping ranges.
+    for (let paraIdx = 0; paraIdx < paragraphTexts.length; paraIdx++) {
+        const paraText = paragraphTexts[paraIdx];
+        const paraCpStart = paragraphCpStarts[paraIdx];
         const textContent = paraText
             .replace(/[\x00-\x06\x08-\x0C\x0E-\x1F]/g, '') // Remove control characters
             .replace(/\x07/g, '');  // Remove cell marks
 
-        cpPosition += paraText.length + 1;  // +1 for the paragraph/cell mark
-
-        // Find the PAPX entry covering this paragraph's position
+        // Find the PAPX entry covering this paragraph's CP start position
         let papx: ParagraphInfo | undefined;
-        while (papxIdx < papxInfo.length && papxInfo[papxIdx].cpEnd <= cpPosition - paraText.length - 1) {
-            papxIdx++;
-        }
-        if (papxIdx < papxInfo.length) {
-            papx = papxInfo[papxIdx];
+        for (let pi = 0; pi < papxInfo.length; pi++) {
+            if (papxInfo[pi].cpStart <= paraCpStart && papxInfo[pi].cpEnd > paraCpStart) {
+                papx = papxInfo[pi];
+                break;
+            }
+            if (papxInfo[pi].cpStart > paraCpStart) break;  // sorted, no point continuing
         }
 
         const istd = papx?.istd ?? 0;
@@ -742,13 +1218,11 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
 
         if (isInTable && !isRowEnd) {
             // This is a table cell content
+            const cellChildren = splitIntoFormattedRuns(textContent, paraCpStart, cpFormattingRanges);
             const cellNode: OfficeContentNode = {
                 type: 'cell',
                 text: textContent,
-                children: [{
-                    type: 'text',
-                    text: textContent,
-                }],
+                children: cellChildren,
                 metadata: {
                     row: currentTableRows.length,
                     col: currentTableRowCells.length,
@@ -792,13 +1266,16 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
             jc === 2 ? 'right' as const :
                 jc === 3 ? 'justify' as const : 'left' as const;
 
+        // Build formatted children for this paragraph
+        const formattedChildren = splitIntoFormattedRuns(textContent, paraCpStart, cpFormattingRanges);
+
         // Check for heading
         const headingLevel = getHeadingLevel(istd);
         if (headingLevel !== undefined) {
             content.push({
                 type: 'heading',
                 text: textContent,
-                children: [{ type: 'text', text: textContent }],
+                children: formattedChildren,
                 metadata: {
                     level: Math.min(headingLevel, 6),
                     alignment,
@@ -825,7 +1302,7 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
             content.push({
                 type: 'list',
                 text: textContent,
-                children: [{ type: 'text', text: textContent }],
+                children: formattedChildren,
                 metadata: {
                     listType: lType,
                     indentation,
@@ -843,7 +1320,7 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
         content.push({
             type: 'paragraph',
             text: textContent,
-            children: [{ type: 'text', text: textContent }],
+            children: formattedChildren,
             metadata: { alignment },
         });
     }
@@ -926,6 +1403,7 @@ export async function parseDoc(fileBuffer: Buffer, config: Required<OfficeParser
                 .filter(t => t !== '')
                 .join(delimiter);
         },
+        toMarkdown: () => astToMarkdown(content, config),
     };
 }
 

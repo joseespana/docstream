@@ -101,6 +101,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined' && require.m
     const args = process.argv.slice(2);
     let fileArg: string | undefined;
     let toText = false;
+    let toMarkdown = false;
     const configArgs: string[] = [];
 
     function isConfigOption(arg: string) {
@@ -125,6 +126,11 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined' && require.m
                 else if (value.toLowerCase() === 'false') toText = false;
                 else console.log(`Invalid value for toText: ${value}`);
             }
+            else if (cleanKey === 'toMarkdown') {
+                if (value.toLowerCase() === 'true') toMarkdown = true;
+                else if (value.toLowerCase() === 'false') toMarkdown = false;
+                else console.log(`Invalid value for toMarkdown: ${value}`);
+            }
             // @ts-ignore
             else if (value.toLowerCase() === 'true') config[cleanKey] = true;
             // @ts-ignore
@@ -135,11 +141,12 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined' && require.m
 
         OfficeParser.parseOffice(fileArg, config)
             .then((ast: OfficeParserAST) => {
-                if (toText) console.log(ast.toText());
+                if (toMarkdown) console.log(ast.toMarkdown());
+                else if (toText) console.log(ast.toText());
                 else console.log(JSON.stringify(ast, null, 2));
             })
             .catch(console.error);
     } else {
-        console.log("Usage: node officeparser [file] [--option=value]");
+        console.log("Usage: node docstream [file] [--option=value]");
     }
 }

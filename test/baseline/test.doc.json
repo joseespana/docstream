@@ -17,7 +17,7 @@
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "This document demonstrates the ability of the calibre DOCX Input plugin to convert the various typographic features in a Microsoft Word (2007 and newer) document. Convert this document to a modern ebook format, such as AZW3 for Kindles or EPUB for other ebook readers, to see it in action.",
       "children": [
         {
@@ -26,12 +26,11 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "There is support for images, tables, lists, footnotes, endnotes, links, dropcaps and various types of text and paragraph level formatting.",
       "children": [
         {
@@ -40,26 +39,57 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "To see the DOCX conversion in action, simply add this file to calibre using the Add Books button and then click Convert.  Set the output format in the top right corner of the conversion dialog to EPUB or AZW3 and click OK.",
       "children": [
         {
           "type": "text",
-          "text": "To see the DOCX conversion in action, simply add this file to calibre using the Add Books button and then click Convert.  Set the output format in the top right corner of the conversion dialog to EPUB or AZW3 and click OK."
+          "text": "To see the DOCX conversion in action, simply add this file to calibre using the "
+        },
+        {
+          "type": "text",
+          "text": "Add Books ",
+          "formatting": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "button and then click "
+        },
+        {
+          "type": "text",
+          "text": "Convert. ",
+          "formatting": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " Set the output format in the top right corner of the conversion dialog to EPUB or AZW3 and click "
+        },
+        {
+          "type": "text",
+          "text": "OK",
+          "formatting": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": " EMBED Excel.Chart.8 \\s ",
       "children": [
         {
@@ -68,7 +98,6 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
@@ -96,12 +125,12 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "level": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "Here, we demonstrate various types of inline text formatting and the use of embedded fonts.",
       "children": [
         {
@@ -110,26 +139,134 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "Here is some bold, italic, bold-italic, underlined and struck out  text. Then, we have a superscript and a subscript. Now we see some red, green and blue text. Some text with a yellow highlight. Some text in a box. Some text in inverse video.",
       "children": [
         {
           "type": "text",
-          "text": "Here is some bold, italic, bold-italic, underlined and struck out  text. Then, we have a superscript and a subscript. Now we see some red, green and blue text. Some text with a yellow highlight. Some text in a box. Some text in inverse video."
+          "text": "Here is some "
+        },
+        {
+          "type": "text",
+          "text": "bold, ",
+          "formatting": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "italic, ",
+          "formatting": {
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "bold-italic, ",
+          "formatting": {
+            "bold": true,
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "underlined ",
+          "formatting": {
+            "underline": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "and "
+        },
+        {
+          "type": "text",
+          "text": "struck out ",
+          "formatting": {
+            "strikethrough": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " text. Then, we have a super"
+        },
+        {
+          "type": "text",
+          "text": "script",
+          "formatting": {
+            "superscript": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and a sub"
+        },
+        {
+          "type": "text",
+          "text": "script",
+          "formatting": {
+            "subscript": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". Now we see some "
+        },
+        {
+          "type": "text",
+          "text": "red",
+          "formatting": {
+            "color": "#FF0000"
+          }
+        },
+        {
+          "type": "text",
+          "text": ", "
+        },
+        {
+          "type": "text",
+          "text": "green",
+          "formatting": {
+            "color": "#FFFF00"
+          }
+        },
+        {
+          "type": "text",
+          "text": " and "
+        },
+        {
+          "type": "text",
+          "text": "blue",
+          "formatting": {
+            "color": "#008080"
+          }
+        },
+        {
+          "type": "text",
+          "text": " text. Some text with a yellow highlight. Some text in a box. Some text in "
+        },
+        {
+          "type": "text",
+          "text": "inverse video",
+          "formatting": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "type": "text",
+          "text": "."
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "A paragraph with styled text: subtle emphasis  followed by strong text and intense emphasis. This paragraph uses document wide styles for styling rather than inline text properties as demonstrated in the previous paragraph  calibre can handle both with equal ease.",
       "children": [
         {
@@ -138,7 +275,6 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
@@ -152,12 +288,12 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "level": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "This document has embedded the Ubuntu font family. The body text is in the Ubuntu typeface, here is some text in the Ubuntu Mono typeface, notice how every letter has the same width, even i and m. Every embedded font will automatically be embedded in the output ebook during conversion. ",
       "children": [
         {
@@ -166,7 +302,6 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
@@ -176,16 +311,20 @@
       "children": [
         {
           "type": "text",
-          "text": "Paragraph level formatting"
+          "text": "Paragraph level formatting",
+          "formatting": {
+            "bold": true,
+            "italic": true
+          }
         }
       ],
       "metadata": {
-        "level": 1,
+        "level": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "You can do crazy things with paragraphs, if the urge strikes you. For instance this paragraph is right aligned and has a right border. It has also been given a light gray background.",
       "children": [
         {
@@ -194,12 +333,11 @@
         }
       ],
       "metadata": {
-        "level": 1,
-        "alignment": "left"
+        "alignment": "right"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "For the lovers of poetry amongst you, paragraphs with hanging indents, like this often come in handy. You can use hanging indents to ensure that a line of poetry retains its individual identity as a line even when the screen is  too narrow to display it as a single line. Not only does this paragraph have a hanging indent, it is also has an extra top margin, setting it apart from the preceding paragraph.",
       "children": [
         {
@@ -208,12 +346,11 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Tables",
       "children": [
         {
@@ -222,164 +359,227 @@
         }
       ],
       "metadata": {
+        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "paragraph",
-      "text": "ITEM",
+      "type": "table",
+      "text": "ITEM\tNEEDED\nBooks\t1\nPens\t3\nPencils\t2\nHighlighter\t2 colors\nScissors\t1 pair",
       "children": [
         {
-          "type": "text",
-          "text": "ITEM"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "NEEDED",
-      "children": [
+          "type": "row",
+          "text": "ITEM\tNEEDED",
+          "children": [
+            {
+              "type": "cell",
+              "text": "ITEM",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "ITEM",
+                  "formatting": {
+                    "bold": true,
+                    "color": "#FFFFFF"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "NEEDED",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "NEEDED",
+                  "formatting": {
+                    "bold": true,
+                    "color": "#FFFFFF"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "NEEDED"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Books",
-      "children": [
+          "type": "row",
+          "text": "Books\t1",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Books",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Books"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "1",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "1"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 1
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "Books"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "1",
-      "children": [
+          "type": "row",
+          "text": "Pens\t3",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Pens",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Pens"
+                }
+              ],
+              "metadata": {
+                "row": 2,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "3",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "3"
+                }
+              ],
+              "metadata": {
+                "row": 2,
+                "col": 1
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "1"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Pens",
-      "children": [
+          "type": "row",
+          "text": "Pencils\t2",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Pencils",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Pencils"
+                }
+              ],
+              "metadata": {
+                "row": 3,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "2",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "2"
+                }
+              ],
+              "metadata": {
+                "row": 3,
+                "col": 1
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "Pens"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "3",
-      "children": [
+          "type": "row",
+          "text": "Highlighter\t2 colors",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Highlighter",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Highlighter"
+                }
+              ],
+              "metadata": {
+                "row": 4,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "2 colors",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "2 colors"
+                }
+              ],
+              "metadata": {
+                "row": 4,
+                "col": 1
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "3"
+          "type": "row",
+          "text": "Scissors\t1 pair",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Scissors",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Scissors"
+                }
+              ],
+              "metadata": {
+                "row": 5,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "1 pair",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "1 pair"
+                }
+              ],
+              "metadata": {
+                "row": 5,
+                "col": 1
+              }
+            }
+          ]
         }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Pencils",
-      "children": [
-        {
-          "type": "text",
-          "text": "Pencils"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "2",
-      "children": [
-        {
-          "type": "text",
-          "text": "2"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Highlighter",
-      "children": [
-        {
-          "type": "text",
-          "text": "Highlighter"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "2 colors",
-      "children": [
-        {
-          "type": "text",
-          "text": "2 colors"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Scissors",
-      "children": [
-        {
-          "type": "text",
-          "text": "Scissors"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "1 pair",
-      "children": [
-        {
-          "type": "text",
-          "text": "1 pair"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
+      ]
     },
     {
       "type": "paragraph",
@@ -408,342 +608,586 @@
       }
     },
     {
-      "type": "paragraph",
-      "text": "City or Town",
+      "type": "table",
+      "text": "City or Town\tPoint A\tPoint B\tPoint C\tPoint D\tPoint E",
       "children": [
         {
-          "type": "text",
-          "text": "City or Town"
+          "type": "row",
+          "text": "City or Town\tPoint A\tPoint B\tPoint C\tPoint D\tPoint E",
+          "children": [
+            {
+              "type": "cell",
+              "text": "City or Town",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "City or Town",
+                  "formatting": {
+                    "size": "11pt"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Point A",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point A",
+                  "formatting": {
+                    "size": "11pt"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Point B",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point B",
+                  "formatting": {
+                    "size": "11pt"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Point C",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point C",
+                  "formatting": {
+                    "size": "11pt"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Point D",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point D",
+                  "formatting": {
+                    "size": "11pt"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Point E",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point E",
+                  "formatting": {
+                    "size": "11pt"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            }
+          ]
         }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
+      ]
     },
     {
-      "type": "paragraph",
-      "text": "Point A",
+      "type": "table",
+      "text": "Point A\t\t\t\t\t",
       "children": [
         {
-          "type": "text",
-          "text": "Point A"
+          "type": "row",
+          "text": "Point A\t\t\t\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Point A",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point A"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            }
+          ]
         }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
+      ]
     },
     {
-      "type": "paragraph",
-      "text": "Point B",
+      "type": "table",
+      "text": "Point B\t87\t\t\t\t\nPoint C\t64\t56\t\t\t",
       "children": [
         {
-          "type": "text",
-          "text": "Point B"
+          "type": "row",
+          "text": "Point B\t87\t\t\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Point B",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point B"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "87",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "87"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "text": "Point C\t64\t56\t\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Point C",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point C"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "64",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "64"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "56",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "56"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 5
+              }
+            }
+          ]
         }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
+      ]
     },
     {
-      "type": "paragraph",
-      "text": "Point C",
+      "type": "table",
+      "text": "Point D\t37\t32\t91\t\t\nPoint E\t93\t35\t54\t43\t",
       "children": [
         {
-          "type": "text",
-          "text": "Point C"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Point D",
-      "children": [
+          "type": "row",
+          "text": "Point D\t37\t32\t91\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Point D",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point D"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "37",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "37"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "32",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "32"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "91",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "91"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "Point D"
+          "type": "row",
+          "text": "Point E\t93\t35\t54\t43\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Point E",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Point E"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "93",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "93"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "35",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "35"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "54",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "54"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "43",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "43"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 5
+              }
+            }
+          ]
         }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Point E",
-      "children": [
-        {
-          "type": "text",
-          "text": "Point E"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Point A",
-      "children": [
-        {
-          "type": "text",
-          "text": "Point A"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "",
-      "children": [
-        {
-          "type": "text",
-          "text": ""
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Point B",
-      "children": [
-        {
-          "type": "text",
-          "text": "Point B"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "87",
-      "children": [
-        {
-          "type": "text",
-          "text": "87"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "",
-      "children": [
-        {
-          "type": "text",
-          "text": ""
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Point C",
-      "children": [
-        {
-          "type": "text",
-          "text": "Point C"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "64",
-      "children": [
-        {
-          "type": "text",
-          "text": "64"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "56",
-      "children": [
-        {
-          "type": "text",
-          "text": "56"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "",
-      "children": [
-        {
-          "type": "text",
-          "text": ""
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Point D",
-      "children": [
-        {
-          "type": "text",
-          "text": "Point D"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "37",
-      "children": [
-        {
-          "type": "text",
-          "text": "37"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "32",
-      "children": [
-        {
-          "type": "text",
-          "text": "32"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "91",
-      "children": [
-        {
-          "type": "text",
-          "text": "91"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "",
-      "children": [
-        {
-          "type": "text",
-          "text": ""
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Point E",
-      "children": [
-        {
-          "type": "text",
-          "text": "Point E"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "93",
-      "children": [
-        {
-          "type": "text",
-          "text": "93"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "35",
-      "children": [
-        {
-          "type": "text",
-          "text": "35"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "54",
-      "children": [
-        {
-          "type": "text",
-          "text": "54"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "43",
-      "children": [
-        {
-          "type": "text",
-          "text": "43"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "",
-      "children": [
-        {
-          "type": "text",
-          "text": ""
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
+      ]
     },
     {
       "type": "paragraph",
@@ -759,342 +1203,522 @@
       }
     },
     {
-      "type": "paragraph",
-      "text": "College",
+      "type": "table",
+      "text": "College\tNew students\tGraduating students\tChange\n\tUndergraduate\t\t\nCedar University\t110\t103\t+7\nOak Institute\t202\t210\t-8\n\tGraduate\t\t\nCedar University\t24\t20\t+4\nElm College\t43\t53\t-10\nTotal\t998\t908\t90",
       "children": [
         {
-          "type": "text",
-          "text": "College"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "New students",
-      "children": [
+          "type": "row",
+          "text": "College\tNew students\tGraduating students\tChange",
+          "children": [
+            {
+              "type": "cell",
+              "text": "College",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "College",
+                  "formatting": {
+                    "bold": true,
+                    "color": "#FFFFFF"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "New students",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "New students",
+                  "formatting": {
+                    "bold": true,
+                    "color": "#FFFFFF"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Graduating students",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Graduating students",
+                  "formatting": {
+                    "bold": true,
+                    "color": "#FFFFFF"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Change",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Change",
+                  "formatting": {
+                    "bold": true,
+                    "color": "#FFFFFF"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "New students"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Graduating students",
-      "children": [
+          "type": "row",
+          "text": "\tUndergraduate\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Undergraduate",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Undergraduate"
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 3
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "Graduating students"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Change",
-      "children": [
+          "type": "row",
+          "text": "Cedar University\t110\t103\t+7",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Cedar University",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Cedar University"
+                }
+              ],
+              "metadata": {
+                "row": 2,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "110",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "110"
+                }
+              ],
+              "metadata": {
+                "row": 2,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "103",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "103"
+                }
+              ],
+              "metadata": {
+                "row": 2,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "+7",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "+7"
+                }
+              ],
+              "metadata": {
+                "row": 2,
+                "col": 3
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "Change"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Undergraduate",
-      "children": [
+          "type": "row",
+          "text": "Oak Institute\t202\t210\t-8",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Oak Institute",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Oak Institute"
+                }
+              ],
+              "metadata": {
+                "row": 3,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "202",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "202"
+                }
+              ],
+              "metadata": {
+                "row": 3,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "210",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "210"
+                }
+              ],
+              "metadata": {
+                "row": 3,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "-8",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "-8"
+                }
+              ],
+              "metadata": {
+                "row": 3,
+                "col": 3
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "Undergraduate"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Cedar University",
-      "children": [
+          "type": "row",
+          "text": "\tGraduate\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 4,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Graduate",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Graduate"
+                }
+              ],
+              "metadata": {
+                "row": 4,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 4,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 4,
+                "col": 3
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "Cedar University"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "110",
-      "children": [
+          "type": "row",
+          "text": "Cedar University\t24\t20\t+4",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Cedar University",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Cedar University"
+                }
+              ],
+              "metadata": {
+                "row": 5,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "24",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "24"
+                }
+              ],
+              "metadata": {
+                "row": 5,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "20",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "20"
+                }
+              ],
+              "metadata": {
+                "row": 5,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "+4",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "+4"
+                }
+              ],
+              "metadata": {
+                "row": 5,
+                "col": 3
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "110"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "103",
-      "children": [
+          "type": "row",
+          "text": "Elm College\t43\t53\t-10",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Elm College",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Elm College"
+                }
+              ],
+              "metadata": {
+                "row": 6,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "43",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "43"
+                }
+              ],
+              "metadata": {
+                "row": 6,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "53",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "53"
+                }
+              ],
+              "metadata": {
+                "row": 6,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "-10",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "-10"
+                }
+              ],
+              "metadata": {
+                "row": 6,
+                "col": 3
+              }
+            }
+          ]
+        },
         {
-          "type": "text",
-          "text": "103"
+          "type": "row",
+          "text": "Total\t998\t908\t90",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Total",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Total"
+                }
+              ],
+              "metadata": {
+                "row": 7,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "998",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "998"
+                }
+              ],
+              "metadata": {
+                "row": 7,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "908",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "908"
+                }
+              ],
+              "metadata": {
+                "row": 7,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "90",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "90"
+                }
+              ],
+              "metadata": {
+                "row": 7,
+                "col": 3
+              }
+            }
+          ]
         }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "+7",
-      "children": [
-        {
-          "type": "text",
-          "text": "+7"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Oak Institute",
-      "children": [
-        {
-          "type": "text",
-          "text": "Oak Institute"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "202",
-      "children": [
-        {
-          "type": "text",
-          "text": "202"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "210",
-      "children": [
-        {
-          "type": "text",
-          "text": "210"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "-8",
-      "children": [
-        {
-          "type": "text",
-          "text": "-8"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Graduate",
-      "children": [
-        {
-          "type": "text",
-          "text": "Graduate"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Cedar University",
-      "children": [
-        {
-          "type": "text",
-          "text": "Cedar University"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "24",
-      "children": [
-        {
-          "type": "text",
-          "text": "24"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "20",
-      "children": [
-        {
-          "type": "text",
-          "text": "20"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "+4",
-      "children": [
-        {
-          "type": "text",
-          "text": "+4"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Elm College",
-      "children": [
-        {
-          "type": "text",
-          "text": "Elm College"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "43",
-      "children": [
-        {
-          "type": "text",
-          "text": "43"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "53",
-      "children": [
-        {
-          "type": "text",
-          "text": "53"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "-10",
-      "children": [
-        {
-          "type": "text",
-          "text": "-10"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Total",
-      "children": [
-        {
-          "type": "text",
-          "text": "Total"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "998",
-      "children": [
-        {
-          "type": "text",
-          "text": "998"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "908",
-      "children": [
-        {
-          "type": "text",
-          "text": "908"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "90",
-      "children": [
-        {
-          "type": "text",
-          "text": "90"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
+      ]
     },
     {
       "type": "paragraph",
@@ -1123,69 +1747,142 @@
       }
     },
     {
-      "type": "paragraph",
-      "text": "One",
+      "type": "table",
+      "text": "One\tThree\tTwo\t\t\tFour\t\t\tTo the left is a table inside a table, with some cells merged.",
       "children": [
         {
-          "type": "text",
-          "text": "One"
+          "type": "row",
+          "text": "One\tThree\tTwo\t\t\tFour\t\t\tTo the left is a table inside a table, with some cells merged.",
+          "children": [
+            {
+              "type": "cell",
+              "text": "One",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "One"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Three",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Three"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Two",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Two"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Four",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Four"
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "To the left is a table inside a table, with some cells merged.",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "To the left is a table inside a table, with some cells merged."
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            }
+          ]
         }
-      ],
-      "metadata": {
-        "alignment": "right"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Three",
-      "children": [
-        {
-          "type": "text",
-          "text": "Three"
-        }
-      ],
-      "metadata": {
-        "alignment": "right"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Two",
-      "children": [
-        {
-          "type": "text",
-          "text": "Two"
-        }
-      ],
-      "metadata": {
-        "alignment": "right"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Four",
-      "children": [
-        {
-          "type": "text",
-          "text": "Four"
-        }
-      ],
-      "metadata": {
-        "alignment": "right"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "To the left is a table inside a table, with some cells merged.",
-      "children": [
-        {
-          "type": "text",
-          "text": "To the left is a table inside a table, with some cells merged."
-        }
-      ],
-      "metadata": {
-        "alignment": "right"
-      }
+      ]
     },
     {
       "type": "paragraph",
@@ -1197,389 +1894,262 @@
         }
       ],
       "metadata": {
-        "alignment": "right"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "December 2007",
-      "children": [
-        {
-          "type": "text",
-          "text": "December 2007"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Sun",
-      "children": [
-        {
-          "type": "text",
-          "text": "Sun"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Mon",
-      "children": [
-        {
-          "type": "text",
-          "text": "Mon"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Tue",
-      "children": [
-        {
-          "type": "text",
-          "text": "Tue"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Wed",
-      "children": [
-        {
-          "type": "text",
-          "text": "Wed"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Thu",
-      "children": [
-        {
-          "type": "text",
-          "text": "Thu"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Fri",
-      "children": [
-        {
-          "type": "text",
-          "text": "Fri"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "Sat",
-      "children": [
-        {
-          "type": "text",
-          "text": "Sat"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "1",
-      "children": [
-        {
-          "type": "text",
-          "text": "1"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "2",
-      "children": [
-        {
-          "type": "text",
-          "text": "2"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "3",
-      "children": [
-        {
-          "type": "text",
-          "text": "3"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "4",
-      "children": [
-        {
-          "type": "text",
-          "text": "4"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "5",
-      "children": [
-        {
-          "type": "text",
-          "text": "5"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "6",
-      "children": [
-        {
-          "type": "text",
-          "text": "6"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "7",
-      "children": [
-        {
-          "type": "text",
-          "text": "7"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "8",
-      "children": [
-        {
-          "type": "text",
-          "text": "8"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "9",
-      "children": [
-        {
-          "type": "text",
-          "text": "9"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "10",
-      "children": [
-        {
-          "type": "text",
-          "text": "10"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "11",
-      "children": [
-        {
-          "type": "text",
-          "text": "11"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "12",
-      "children": [
-        {
-          "type": "text",
-          "text": "12"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "13",
-      "children": [
-        {
-          "type": "text",
-          "text": "13"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "14",
-      "children": [
-        {
-          "type": "text",
-          "text": "14"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "15",
-      "children": [
-        {
-          "type": "text",
-          "text": "15"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "16",
-      "children": [
-        {
-          "type": "text",
-          "text": "16"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "17",
-      "children": [
-        {
-          "type": "text",
-          "text": "17"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "18",
-      "children": [
-        {
-          "type": "text",
-          "text": "18"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "paragraph",
-      "text": "19",
-      "children": [
-        {
-          "type": "text",
-          "text": "19"
-        }
-      ],
-      "metadata": {
-        "alignment": "left"
-      }
-    },
-    {
-      "type": "heading",
-      "text": "20",
-      "children": [
-        {
-          "type": "text",
-          "text": "20"
-        }
-      ],
-      "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
       "type": "table",
-      "text": "21\t\t22\t\t\t\t\t\n\t\t\t\t\t\t\t\n23\t\t24\n25\t\t26\t\t27\t\t28\t\t29\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t30\t\t31\t\t\t\t\t\t\t\t",
+      "text": "December 2007\nSun\t\tMon\t\tTue\t\tWed\t\tThu\t\tFri\t\tSat",
       "children": [
         {
           "type": "row",
-          "text": "21\t\t22\t\t\t\t\t",
+          "text": "December 2007",
           "children": [
             {
               "type": "cell",
-              "text": "21",
+              "text": "December 2007",
               "children": [
                 {
                   "type": "text",
-                  "text": "21"
+                  "text": "December 2007",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "text": "Sun\t\tMon\t\tTue\t\tWed\t\tThu\t\tFri\t\tSat",
+          "children": [
+            {
+              "type": "cell",
+              "text": "Sun",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Sun",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Mon",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Mon",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Tue",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Tue",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Wed",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Wed",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Thu",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Thu",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Fri",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Fri",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "Sat",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "Sat",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 1,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "\t\t\t\t\t\t\t\t\t\t\t\t1",
+      "children": [
+        {
+          "type": "row",
+          "text": "\t\t\t\t\t\t\t\t\t\t\t\t1",
+          "children": [
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
                 }
               ],
               "metadata": {
@@ -1599,6 +2169,1373 @@
               "metadata": {
                 "row": 0,
                 "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "1",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "1",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+      "children": [
+        {
+          "type": "row",
+          "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "2\t\t3\t\t4\t\t5\t\t6\t\t7\t\t8",
+      "children": [
+        {
+          "type": "row",
+          "text": "2\t\t3\t\t4\t\t5\t\t6\t\t7\t\t8",
+          "children": [
+            {
+              "type": "cell",
+              "text": "2",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "2",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "3",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "3",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "4",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "4",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "5",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "5",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "6",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "6",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "7",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "7",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "8",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "8",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+      "children": [
+        {
+          "type": "row",
+          "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "9\t\t10\t\t11\t\t12\t\t13\t\t14\t\t15",
+      "children": [
+        {
+          "type": "row",
+          "text": "9\t\t10\t\t11\t\t12\t\t13\t\t14\t\t15",
+          "children": [
+            {
+              "type": "cell",
+              "text": "9",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "9",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "10",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "10",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "11",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "11",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "12",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "12",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "13",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "13",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "14",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "14",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "15",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "15",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+      "children": [
+        {
+          "type": "row",
+          "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "16\t\t17\t\t18\t\t19\t\t20\t\t21\t\t22",
+      "children": [
+        {
+          "type": "row",
+          "text": "16\t\t17\t\t18\t\t19\t\t20\t\t21\t\t22",
+          "children": [
+            {
+              "type": "cell",
+              "text": "16",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "16",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "17",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "17",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "18",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "18",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "19",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "19",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "20",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "20",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "21",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "21",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
               }
             },
             {
@@ -1607,89 +3544,28 @@
               "children": [
                 {
                   "type": "text",
-                  "text": "22"
+                  "text": "22",
+                  "formatting": {
+                    "color": "#808080"
+                  }
                 }
               ],
               "metadata": {
                 "row": 0,
-                "col": 2
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 3
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 4
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 5
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 6
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 7
+                "col": 12
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+      "children": [
         {
           "type": "row",
-          "text": "\t\t\t\t\t\t\t",
+          "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
           "children": [
             {
               "type": "cell",
@@ -1701,7 +3577,7 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 0
               }
             },
@@ -1715,7 +3591,7 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 1
               }
             },
@@ -1729,7 +3605,7 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 2
               }
             },
@@ -1743,7 +3619,7 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 3
               }
             },
@@ -1757,7 +3633,7 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 4
               }
             },
@@ -1771,7 +3647,7 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 5
               }
             },
@@ -1785,7 +3661,7 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 6
               }
             },
@@ -1799,15 +3675,91 @@
                 }
               ],
               "metadata": {
-                "row": 1,
+                "row": 0,
                 "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "23\t\t24\t\t25\t\t26\t\t27\t\t28\t\t29",
+      "children": [
         {
           "type": "row",
-          "text": "23\t\t24",
+          "text": "23\t\t24\t\t25\t\t26\t\t27\t\t28\t\t29",
           "children": [
             {
               "type": "cell",
@@ -1815,11 +3767,14 @@
               "children": [
                 {
                   "type": "text",
-                  "text": "23"
+                  "text": "23",
+                  "formatting": {
+                    "color": "#808080"
+                  }
                 }
               ],
               "metadata": {
-                "row": 2,
+                "row": 0,
                 "col": 0
               }
             },
@@ -1833,7 +3788,7 @@
                 }
               ],
               "metadata": {
-                "row": 2,
+                "row": 0,
                 "col": 1
               }
             },
@@ -1843,32 +3798,15 @@
               "children": [
                 {
                   "type": "text",
-                  "text": "24"
+                  "text": "24",
+                  "formatting": {
+                    "color": "#808080"
+                  }
                 }
               ],
               "metadata": {
-                "row": 2,
+                "row": 0,
                 "col": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "text": "25\t\t26\t\t27\t\t28\t\t29\t\t\t\t\t\t\t\t\t\t\t\t\t",
-          "children": [
-            {
-              "type": "cell",
-              "text": "25",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "25"
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 0
               }
             },
             {
@@ -1881,8 +3819,39 @@
                 }
               ],
               "metadata": {
-                "row": 3,
-                "col": 1
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "25",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "25",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
               }
             },
             {
@@ -1891,67 +3860,14 @@
               "children": [
                 {
                   "type": "text",
-                  "text": "26"
+                  "text": "26",
+                  "formatting": {
+                    "color": "#808080"
+                  }
                 }
               ],
               "metadata": {
-                "row": 3,
-                "col": 2
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 3
-              }
-            },
-            {
-              "type": "cell",
-              "text": "27",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "27"
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 4
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 5
-              }
-            },
-            {
-              "type": "cell",
-              "text": "28",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "28"
-                }
-              ],
-              "metadata": {
-                "row": 3,
+                "row": 0,
                 "col": 6
               }
             },
@@ -1965,21 +3881,24 @@
                 }
               ],
               "metadata": {
-                "row": 3,
+                "row": 0,
                 "col": 7
               }
             },
             {
               "type": "cell",
-              "text": "29",
+              "text": "27",
               "children": [
                 {
                   "type": "text",
-                  "text": "29"
+                  "text": "27",
+                  "formatting": {
+                    "color": "#808080"
+                  }
                 }
               ],
               "metadata": {
-                "row": 3,
+                "row": 0,
                 "col": 8
               }
             },
@@ -1993,21 +3912,24 @@
                 }
               ],
               "metadata": {
-                "row": 3,
+                "row": 0,
                 "col": 9
               }
             },
             {
               "type": "cell",
-              "text": "",
+              "text": "28",
               "children": [
                 {
                   "type": "text",
-                  "text": ""
+                  "text": "28",
+                  "formatting": {
+                    "color": "#808080"
+                  }
                 }
               ],
               "metadata": {
-                "row": 3,
+                "row": 0,
                 "col": 10
               }
             },
@@ -2021,155 +3943,38 @@
                 }
               ],
               "metadata": {
-                "row": 3,
+                "row": 0,
                 "col": 11
               }
             },
             {
               "type": "cell",
-              "text": "",
+              "text": "29",
               "children": [
                 {
                   "type": "text",
-                  "text": ""
+                  "text": "29",
+                  "formatting": {
+                    "color": "#808080"
+                  }
                 }
               ],
               "metadata": {
-                "row": 3,
+                "row": 0,
                 "col": 12
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 13
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 14
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 15
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 16
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 17
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 18
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 19
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 20
-              }
-            },
-            {
-              "type": "cell",
-              "text": "",
-              "children": [
-                {
-                  "type": "text",
-                  "text": ""
-                }
-              ],
-              "metadata": {
-                "row": 3,
-                "col": 21
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
+      "children": [
         {
           "type": "row",
-          "text": "\t30\t\t31\t\t\t\t\t\t\t\t",
+          "text": "\t\t\t\t\t\t\t\t\t\t\t\t",
           "children": [
             {
               "type": "cell",
@@ -2181,21 +3986,21 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 0
               }
             },
             {
               "type": "cell",
-              "text": "30",
+              "text": "",
               "children": [
                 {
                   "type": "text",
-                  "text": "30"
+                  "text": ""
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 1
               }
             },
@@ -2209,21 +4014,21 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 2
               }
             },
             {
               "type": "cell",
-              "text": "31",
+              "text": "",
               "children": [
                 {
                   "type": "text",
-                  "text": "31"
+                  "text": ""
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 3
               }
             },
@@ -2237,7 +4042,7 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 4
               }
             },
@@ -2251,7 +4056,7 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 5
               }
             },
@@ -2265,7 +4070,7 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 6
               }
             },
@@ -2279,7 +4084,7 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 7
               }
             },
@@ -2293,7 +4098,7 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 8
               }
             },
@@ -2307,7 +4112,7 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 9
               }
             },
@@ -2321,7 +4126,7 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 10
               }
             },
@@ -2335,8 +4140,22 @@
                 }
               ],
               "metadata": {
-                "row": 4,
+                "row": 0,
                 "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
               }
             }
           ]
@@ -2344,7 +4163,207 @@
       ]
     },
     {
-      "type": "paragraph",
+      "type": "table",
+      "text": "30\t\t31\t\t\t\t\t\t\t\t\t\t",
+      "children": [
+        {
+          "type": "row",
+          "text": "30\t\t31\t\t\t\t\t\t\t\t\t\t",
+          "children": [
+            {
+              "type": "cell",
+              "text": "30",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "30",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 0
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 1
+              }
+            },
+            {
+              "type": "cell",
+              "text": "31",
+              "children": [
+                {
+                  "type": "text",
+                  "text": "31",
+                  "formatting": {
+                    "color": "#808080"
+                  }
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 2
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 3
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 4
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 5
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 6
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 7
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 8
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 9
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 10
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 11
+              }
+            },
+            {
+              "type": "cell",
+              "text": "",
+              "children": [
+                {
+                  "type": "text",
+                  "text": ""
+                }
+              ],
+              "metadata": {
+                "row": 0,
+                "col": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
       "text": "Structural Elements",
       "children": [
         {
@@ -2353,6 +4372,7 @@
         }
       ],
       "metadata": {
+        "level": 1,
         "alignment": "left"
       }
     },
@@ -2370,7 +4390,7 @@
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Footnotes & Endnotes",
       "children": [
         {
@@ -2379,6 +4399,7 @@
         }
       ],
       "metadata": {
+        "level": 2,
         "alignment": "left"
       }
     },
@@ -2396,7 +4417,7 @@
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Dropcaps",
       "children": [
         {
@@ -2405,6 +4426,7 @@
         }
       ],
       "metadata": {
+        "level": 2,
         "alignment": "left"
       }
     },
@@ -2414,7 +4436,10 @@
       "children": [
         {
           "type": "text",
-          "text": "D"
+          "text": "D",
+          "formatting": {
+            "size": "58.5pt"
+          }
         }
       ],
       "metadata": {
@@ -2435,7 +4460,7 @@
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Links",
       "children": [
         {
@@ -2444,6 +4469,7 @@
         }
       ],
       "metadata": {
+        "level": 2,
         "alignment": "left"
       }
     },
@@ -2461,7 +4487,7 @@
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Table of Contents",
       "children": [
         {
@@ -2470,6 +4496,7 @@
         }
       ],
       "metadata": {
+        "level": 2,
         "alignment": "left"
       }
     },
@@ -2487,33 +4514,20 @@
       }
     },
     {
-      "type": "table",
+      "type": "paragraph",
       "text": "TOC \\o \"1-3\" \\z \\u \\hHYPERLINK \\l \"_Toc581531977\" \\hDemonstration of DOCX support in calibrePAGEREF _Toc581531977 \\h1",
       "children": [
         {
-          "type": "row",
-          "text": "TOC \\o \"1-3\" \\z \\u \\hHYPERLINK \\l \"_Toc581531977\" \\hDemonstration of DOCX support in calibrePAGEREF _Toc581531977 \\h1",
-          "children": [
-            {
-              "type": "cell",
-              "text": "TOC \\o \"1-3\" \\z \\u \\hHYPERLINK \\l \"_Toc581531977\" \\hDemonstration of DOCX support in calibrePAGEREF _Toc581531977 \\h1",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "TOC \\o \"1-3\" \\z \\u \\hHYPERLINK \\l \"_Toc581531977\" \\hDemonstration of DOCX support in calibrePAGEREF _Toc581531977 \\h1"
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 0
-              }
-            }
-          ]
+          "type": "text",
+          "text": "TOC \\o \"1-3\" \\z \\u \\hHYPERLINK \\l \"_Toc581531977\" \\hDemonstration of DOCX support in calibrePAGEREF _Toc581531977 \\h1"
         }
-      ]
+      ],
+      "metadata": {
+        "alignment": "left"
+      }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "HYPERLINK \\l \"_Toc2054249818\" \\hText FormattingPAGEREF _Toc2054249818 \\h1",
       "children": [
         {
@@ -2522,7 +4536,6 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
@@ -2553,30 +4566,17 @@
       }
     },
     {
-      "type": "table",
+      "type": "paragraph",
       "text": "HYPERLINK \\l \"_Toc2022725662\" \\hParagraph level formattingPAGEREF _Toc2022725662 \\h2",
       "children": [
         {
-          "type": "row",
-          "text": "HYPERLINK \\l \"_Toc2022725662\" \\hParagraph level formattingPAGEREF _Toc2022725662 \\h2",
-          "children": [
-            {
-              "type": "cell",
-              "text": "HYPERLINK \\l \"_Toc2022725662\" \\hParagraph level formattingPAGEREF _Toc2022725662 \\h2",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "HYPERLINK \\l \"_Toc2022725662\" \\hParagraph level formattingPAGEREF _Toc2022725662 \\h2"
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 0
-              }
-            }
-          ]
+          "type": "text",
+          "text": "HYPERLINK \\l \"_Toc2022725662\" \\hParagraph level formattingPAGEREF _Toc2022725662 \\h2"
         }
-      ]
+      ],
+      "metadata": {
+        "alignment": "left"
+      }
     },
     {
       "type": "paragraph",
@@ -2618,72 +4618,56 @@
       }
     },
     {
-      "type": "table",
-      "text": "HYPERLINK \\l \"_Toc1977424358\" \\hDropcapsPAGEREF _Toc1977424358 \\h5\tHYPERLINK \\l \"_Toc1233048813\" \\hLinksPAGEREF _Toc1233048813 \\h5\tHYPERLINK \\l \"_Toc64145348\" \\hTable of ContentsPAGEREF _Toc64145348 \\h5\tHYPERLINK \\l \"_Toc484565143\" \\hImagesPAGEREF _Toc484565143 \\h6",
+      "type": "paragraph",
+      "text": "HYPERLINK \\l \"_Toc1977424358\" \\hDropcapsPAGEREF _Toc1977424358 \\h5",
       "children": [
         {
-          "type": "row",
-          "text": "HYPERLINK \\l \"_Toc1977424358\" \\hDropcapsPAGEREF _Toc1977424358 \\h5\tHYPERLINK \\l \"_Toc1233048813\" \\hLinksPAGEREF _Toc1233048813 \\h5\tHYPERLINK \\l \"_Toc64145348\" \\hTable of ContentsPAGEREF _Toc64145348 \\h5\tHYPERLINK \\l \"_Toc484565143\" \\hImagesPAGEREF _Toc484565143 \\h6",
-          "children": [
-            {
-              "type": "cell",
-              "text": "HYPERLINK \\l \"_Toc1977424358\" \\hDropcapsPAGEREF _Toc1977424358 \\h5",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "HYPERLINK \\l \"_Toc1977424358\" \\hDropcapsPAGEREF _Toc1977424358 \\h5"
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 0
-              }
-            },
-            {
-              "type": "cell",
-              "text": "HYPERLINK \\l \"_Toc1233048813\" \\hLinksPAGEREF _Toc1233048813 \\h5",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "HYPERLINK \\l \"_Toc1233048813\" \\hLinksPAGEREF _Toc1233048813 \\h5"
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 1
-              }
-            },
-            {
-              "type": "cell",
-              "text": "HYPERLINK \\l \"_Toc64145348\" \\hTable of ContentsPAGEREF _Toc64145348 \\h5",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "HYPERLINK \\l \"_Toc64145348\" \\hTable of ContentsPAGEREF _Toc64145348 \\h5"
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 2
-              }
-            },
-            {
-              "type": "cell",
-              "text": "HYPERLINK \\l \"_Toc484565143\" \\hImagesPAGEREF _Toc484565143 \\h6",
-              "children": [
-                {
-                  "type": "text",
-                  "text": "HYPERLINK \\l \"_Toc484565143\" \\hImagesPAGEREF _Toc484565143 \\h6"
-                }
-              ],
-              "metadata": {
-                "row": 0,
-                "col": 3
-              }
-            }
-          ]
+          "type": "text",
+          "text": "HYPERLINK \\l \"_Toc1977424358\" \\hDropcapsPAGEREF _Toc1977424358 \\h5"
         }
-      ]
+      ],
+      "metadata": {
+        "alignment": "left"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": "HYPERLINK \\l \"_Toc1233048813\" \\hLinksPAGEREF _Toc1233048813 \\h5",
+      "children": [
+        {
+          "type": "text",
+          "text": "HYPERLINK \\l \"_Toc1233048813\" \\hLinksPAGEREF _Toc1233048813 \\h5"
+        }
+      ],
+      "metadata": {
+        "alignment": "left"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": "HYPERLINK \\l \"_Toc64145348\" \\hTable of ContentsPAGEREF _Toc64145348 \\h5",
+      "children": [
+        {
+          "type": "text",
+          "text": "HYPERLINK \\l \"_Toc64145348\" \\hTable of ContentsPAGEREF _Toc64145348 \\h5"
+        }
+      ],
+      "metadata": {
+        "alignment": "left"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": "HYPERLINK \\l \"_Toc484565143\" \\hImagesPAGEREF _Toc484565143 \\h6",
+      "children": [
+        {
+          "type": "text",
+          "text": "HYPERLINK \\l \"_Toc484565143\" \\hImagesPAGEREF _Toc484565143 \\h6"
+        }
+      ],
+      "metadata": {
+        "alignment": "left"
+      }
     },
     {
       "type": "paragraph",
@@ -2751,7 +4735,7 @@
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Images",
       "children": [
         {
@@ -2760,6 +4744,7 @@
         }
       ],
       "metadata": {
+        "level": 1,
         "alignment": "left"
       }
     },
@@ -2790,7 +4775,7 @@
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Lists",
       "children": [
         {
@@ -2799,6 +4784,7 @@
         }
       ],
       "metadata": {
+        "level": 1,
         "alignment": "left"
       }
     },
@@ -2816,7 +4802,7 @@
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Bulleted List",
       "children": [
         {
@@ -2825,11 +4811,12 @@
         }
       ],
       "metadata": {
+        "level": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "paragraph",
+      "type": "list",
       "text": "One",
       "children": [
         {
@@ -2838,11 +4825,15 @@
         }
       ],
       "metadata": {
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "1",
+        "itemIndex": 0,
         "alignment": "left"
       }
     },
     {
-      "type": "paragraph",
+      "type": "list",
       "text": "Two",
       "children": [
         {
@@ -2851,11 +4842,15 @@
         }
       ],
       "metadata": {
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "1",
+        "itemIndex": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "paragraph",
+      "type": "heading",
       "text": "Numbered List",
       "children": [
         {
@@ -2864,11 +4859,12 @@
         }
       ],
       "metadata": {
+        "level": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "paragraph",
+      "type": "list",
       "text": "One, with a very long line to demonstrate that the hanging indent for the list is working correctly",
       "children": [
         {
@@ -2877,11 +4873,15 @@
         }
       ],
       "metadata": {
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "2",
+        "itemIndex": 0,
         "alignment": "left"
       }
     },
     {
-      "type": "paragraph",
+      "type": "list",
       "text": "Two",
       "children": [
         {
@@ -2890,6 +4890,10 @@
         }
       ],
       "metadata": {
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "2",
+        "itemIndex": 1,
         "alignment": "left"
       }
     },
@@ -2903,12 +4907,12 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "level": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "One",
       "children": [
         {
@@ -2917,12 +4921,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "3",
+        "itemIndex": 0,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Two",
       "children": [
         {
@@ -2931,12 +4938,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 1,
+        "listId": "3",
+        "itemIndex": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Three",
       "children": [
         {
@@ -2945,12 +4955,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 2,
+        "listId": "3",
+        "itemIndex": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Four with a very long line to demonstrate that the hanging indent for the list is working correctly.",
       "children": [
         {
@@ -2959,12 +4972,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 2,
+        "listId": "3",
+        "itemIndex": 3,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Five",
       "children": [
         {
@@ -2973,12 +4989,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 2,
+        "listId": "3",
+        "itemIndex": 4,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Six",
       "children": [
         {
@@ -2987,12 +5006,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "3",
+        "itemIndex": 5,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "A Multi-level list with bullets:",
       "children": [
         {
@@ -3001,12 +5023,11 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "One",
       "children": [
         {
@@ -3015,12 +5036,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "4",
+        "itemIndex": 0,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Two",
       "children": [
         {
@@ -3029,12 +5053,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 1,
+        "listId": "4",
+        "itemIndex": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "This bullet uses an image as the bullet item",
       "children": [
         {
@@ -3043,12 +5070,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 2,
+        "listId": "4",
+        "itemIndex": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Four",
       "children": [
         {
@@ -3057,12 +5087,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 3,
+        "listId": "4",
+        "itemIndex": 3,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Five",
       "children": [
         {
@@ -3071,7 +5104,10 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "4",
+        "itemIndex": 4,
         "alignment": "left"
       }
     },
@@ -3085,12 +5121,12 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "level": 2,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "One",
       "children": [
         {
@@ -3099,12 +5135,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "7",
+        "itemIndex": 0,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Two",
       "children": [
         {
@@ -3113,12 +5152,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "7",
+        "itemIndex": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "paragraph",
       "text": "An interruption in our regularly scheduled listing, for this essential and very relevant public service announcement.",
       "children": [
         {
@@ -3127,12 +5169,11 @@
         }
       ],
       "metadata": {
-        "level": 1,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "We now resume our normal programming",
       "children": [
         {
@@ -3141,12 +5182,15 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "7",
+        "itemIndex": 0,
         "alignment": "left"
       }
     },
     {
-      "type": "heading",
+      "type": "list",
       "text": "Four",
       "children": [
         {
@@ -3155,7 +5199,10 @@
         }
       ],
       "metadata": {
-        "level": 1,
+        "listType": "unordered",
+        "indentation": 0,
+        "listId": "7",
+        "itemIndex": 1,
         "alignment": "left"
       }
     },

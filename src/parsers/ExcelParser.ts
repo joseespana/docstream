@@ -27,6 +27,7 @@ import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
 import { performOcr } from '../utils/ocrUtils';
+import { astToMarkdown } from '../utils/markdownUtils';
 import { getElementsByTagName, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
 import { extractFiles } from '../utils/zipUtils';
 
@@ -673,6 +674,7 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
                 return t;
             };
             return getText(c);
-        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n')
+        }).filter(t => t != '').join(config.newlineDelimiter ?? '\n'),
+        toMarkdown: () => astToMarkdown(content, config)
     };
 };
