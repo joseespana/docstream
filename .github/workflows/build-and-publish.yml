@@ -2,8 +2,7 @@
 # Triggered when a GitHub Release is published (draft → published).
 # Flow: checkout → install → test → build → attach bundle → publish to npm
 #
-# Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret needed.
-# Configure at: https://www.npmjs.com/package/@jose.espana/docstream/access
+# Requires NPM_TOKEN secret (Granular Access Token with read/write on the package).
 
 name: Build and Publish
 
@@ -52,5 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to npm (Trusted Publishing / OIDC)
+      - name: Publish to npm
         run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
