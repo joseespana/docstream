@@ -60,7 +60,8 @@
  */
 
 import { XMLSerializer } from '@xmldom/xmldom';
-import { ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
+import { ChartMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
+import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
 import { performOcr } from '../utils/ocrUtils';
@@ -89,6 +90,8 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
     const endnotesFileRegex = /word\/endnotes[\d+]?.xml/;
     const numberingFileRegex = /word\/numbering[\d+]?.xml/;
     const mediaFileRegex = /(word\/)?media\/.*/;
+    const chartFileRegex = /word\/charts\/chart\d+\.xml/;
+    const chartRelsRegex = /word\/charts\/_rels\/chart\d+\.xml\.rels/;
     const corePropsFileRegex = /docProps\/core[\d+]?.xml/;
     const relsFileRegex = /word\/_rels\/document[\d+]?.xml\.rels/;
     const stylesFileRegex = /word\/styles[\d+]?.xml/;
@@ -184,7 +187,9 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
         !!x.match(corePropsFileRegex) ||
         !!x.match(relsFileRegex) ||
         !!x.match(stylesFileRegex) ||
-        (!!config.extractAttachments && !!x.match(mediaFileRegex))
+        (!!config.extractAttachments && !!x.match(mediaFileRegex)) ||
+        (!!config.extractAttachments && !!x.match(chartFileRegex)) ||
+        (!!config.extractAttachments && !!x.match(chartRelsRegex))
     );
 
     // Extract metadata
@@ -470,6 +475,32 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
                     for (const imgNode of allImages) {
                         const imgXml = xmlSerializer.serializeToString(imgNode);
 
+                        // Check if this drawing contains a chart (not an image)
+                        const graphicData = getElementsByTagName(imgNode, "a:graphicData")[0];
+                        if (graphicData) {
+                            const uri = graphicData.getAttribute("uri");
+                            if (uri === "http://schemas.openxmlformats.org/drawingml/2006/chart") {
+                                const cChart = getElementsByTagName(graphicData, "c:chart")[0];
+                                if (cChart) {
+                                    const chartRId = cChart.getAttribute("r:id");
+                                    if (chartRId && relsMap[chartRId]) {
+                                        const chartTarget = relsMap[chartRId];
+                                        const chartName = chartTarget.split('/').pop() || '';
+                                        const chartNode: OfficeContentNode = {
+                                            type: 'chart',
+                                            text: '',
+                                            metadata: { attachmentName: chartName } as ChartMetadata
+                                        };
+                                        if (config.includeRawContent) {
+                                            chartNode.rawContent = imgXml;
+                                        }
+                                        children.push(chartNode);
+                                    }
+                                }
+                                continue; // Skip image processing for chart drawings
+                            }
+                        }
+
                         // Extract Alt Text
                         let altText = '';
                         const docPr = getElementsByTagName(imgNode, "wp:docPr")[0];
@@ -749,6 +780,8 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
         if (file.path.match(stylesFileRegex)) continue;
         if (file.path.match(footnotesFileRegex)) continue;
         if (file.path.match(endnotesFileRegex)) continue;
+        if (file.path.match(chartFileRegex)) continue;
+        if (file.path.match(chartRelsRegex)) continue;
 
         const documentContent = file.content.toString();
         if (config.includeRawContent) {
@@ -787,25 +820,51 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
             }
         }
 
-        // Assign OCR text to image nodes
-        if (config.ocr) {
-            const assignOcr = (nodes: OfficeContentNode[]) => {
-                for (const node of nodes) {
-                    if (node.type === 'image' && 'attachmentName' in (node.metadata || {})) {
-                        const meta = node.metadata as ImageMetadata;
-                        const attachment = attachments.find(a => a.name === meta.attachmentName);
-                        if (attachment && attachment.ocrText) {
-                            node.text = attachment.ocrText;
-                            attachment.altText = meta.altText;
+        // Extract chart attachments
+        const chartFiles = files.filter(f => f.path.match(chartFileRegex));
+        for (const chart of chartFiles) {
+            const attachment: OfficeAttachment = {
+                type: 'chart',
+                mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                data: chart.content.toString('base64'),
+                name: chart.path.split('/').pop() || '',
+                extension: 'xml'
+            };
+
+            try {
+                const chartData = extractChartData(chart.content);
+                attachment.chartData = chartData;
+            } catch (e) {
+                logWarning(`Failed to extract chart data from ${chart.path}:`, config, e);
+            }
+
+            attachments.push(attachment);
+        }
+
+        // Assign attachment data (OCR text to images, chart data to charts)
+        const assignAttachmentData = (nodes: OfficeContentNode[]) => {
+            for (const node of nodes) {
+                if ('attachmentName' in (node.metadata || {})) {
+                    const meta = node.metadata as ImageMetadata | ChartMetadata;
+                    const attachment = attachments.find(a => a.name === meta.attachmentName);
+                    if (attachment) {
+                        if (node.type === 'image') {
+                            if (attachment.ocrText) {
+                                node.text = attachment.ocrText;
+                            }
+                            attachment.altText = (meta as ImageMetadata).altText;
+                        }
+                        if (node.type === 'chart' && attachment.chartData) {
+                            node.text = attachment.chartData.rawTexts.join(config.newlineDelimiter || '\n');
                         }
                     }
-                    if (node.children) {
-                        assignOcr(node.children);
-                    }
                 }
-            };
-            assignOcr(content);
-        }
+                if (node.children) {
+                    assignAttachmentData(node.children);
+                }
+            }
+        };
+        assignAttachmentData(content);
     }
 
     if (config.putNotesAtLast && collectedNotes.length > 0) {

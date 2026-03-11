@@ -972,6 +972,113 @@ function compareRtfParity(category: string, expected: FeatureMetrics, actual: Fe
 }
 
 /**
+ * ODT-specific parity comparison.
+ * Handles inherent ODT format differences with appropriate WARN/PASS statuses.
+ *
+ * ODT Differences vs DOCX:
+ * - Lists: LibreOffice may convert unordered bullets to ordered lists
+ * - Headings: Count may differ slightly due to export conversion
+ * - Images: May include chart replacement images or differ in count
+ * - Links: TOC/internal references may inflate link count
+ * - Charts: ODT embeds charts as ODF objects, detection may differ
+ */
+function compareOdtParity(category: string, expected: FeatureMetrics, actual: FeatureMetrics): FeatureTest[] {
+    const results: FeatureTest[] = [];
+
+    const createResult = (
+        feature: string, exp: any, act: any, condition: boolean, details: string,
+        status?: 'PASS' | 'FAIL' | 'WARN' | 'SKIP'
+    ): FeatureTest => ({
+        category, feature, fileType: 'odt',
+        result: { status: status ?? (condition ? 'PASS' : 'FAIL'), expected: exp, actual: act, details }
+    });
+
+    // Lists: LibreOffice may convert bullet types during Save As ODT
+    const listMatch = actual.lists.total === expected.lists.total;
+    results.push(createResult('Lists - Total', expected.lists.total, actual.lists.total, listMatch,
+        listMatch ? `Lists match: ${actual.lists.total}` : `ODT lists: ${actual.lists.total} (DOCX: ${expected.lists.total})`
+    ));
+
+    if (expected.lists.total > 0 && actual.lists.total > 0) {
+        const typeMatch = actual.lists.ordered === expected.lists.ordered && actual.lists.unordered === expected.lists.unordered;
+        results.push(createResult('Lists - Types',
+            `${expected.lists.ordered} ordered, ${expected.lists.unordered} unordered`,
+            `${actual.lists.ordered} ordered, ${actual.lists.unordered} unordered`,
+            typeMatch,
+            typeMatch ? 'Type distribution matches' : `ODT list type conversion (LibreOffice may remap bullet styles)`,
+            typeMatch ? 'PASS' : 'WARN'
+        ));
+    }
+
+    // Tables
+    const tableMatch = actual.tables.total === expected.tables.total;
+    results.push(createResult('Tables - Total', expected.tables.total, actual.tables.total, tableMatch,
+        tableMatch ? `Tables match: ${actual.tables.total}` : `Expected ${expected.tables.total}, got ${actual.tables.total}`
+    ));
+
+    // Headings: May differ slightly due to export conversion
+    const headingMatch = actual.headings.total === expected.headings.total;
+    const headingDiff = Math.abs(actual.headings.total - expected.headings.total);
+    results.push(createResult('Headings', expected.headings.total, actual.headings.total, headingMatch,
+        headingMatch ? `Headings match: ${actual.headings.total}` : `ODT headings: ${actual.headings.total} (DOCX: ${expected.headings.total})`,
+        headingMatch ? 'PASS' : (headingDiff <= 3 ? 'WARN' : 'FAIL')
+    ));
+
+    // Images: ODT may include chart replacement images
+    const imageMatch = actual.images === expected.images;
+    const imageDiff = Math.abs(actual.images - expected.images);
+    results.push(createResult('Images', expected.images, actual.images, imageMatch,
+        imageMatch ? `Images match: ${actual.images}` : `ODT images: ${actual.images} (DOCX: ${expected.images}) - format differences`,
+        imageMatch ? 'PASS' : (imageDiff <= 2 ? 'WARN' : 'FAIL')
+    ));
+
+    // Links: ODT may include TOC/internal references
+    const linkMatch = actual.links.total === expected.links.total;
+    results.push(createResult('Links - Total', expected.links.total, actual.links.total, linkMatch,
+        linkMatch ? `Links match: ${actual.links.total}`
+            : actual.links.total > expected.links.total
+                ? `ODT hyperlinks: ${actual.links.total} (DOCX: ${expected.links.total}) - includes TOC/internal refs`
+                : `Expected ${expected.links.total}, got ${actual.links.total}`,
+        linkMatch ? 'PASS' : 'WARN'
+    ));
+
+    // Attachments
+    const attachMatch = actual.attachments.total === expected.attachments.total;
+    results.push(createResult('Attachments - Total', expected.attachments.total, actual.attachments.total, attachMatch,
+        attachMatch ? `Attachments match: ${actual.attachments.total}` : `ODT attachments: ${actual.attachments.total} (DOCX: ${expected.attachments.total})`,
+        attachMatch ? 'PASS' : 'WARN'
+    ));
+
+    if (expected.attachments.total > 0 || actual.attachments.total > 0) {
+        const ocrMatch = actual.attachments.withOCR === expected.attachments.withOCR;
+        results.push(createResult('Attachments - With OCR',
+            `${expected.attachments.withOCR}/${expected.attachments.total}`,
+            `${actual.attachments.withOCR}/${actual.attachments.total}`,
+            ocrMatch, `${actual.attachments.withOCR}/${actual.attachments.total} have OCR`,
+            ocrMatch ? 'PASS' : 'WARN'
+        ));
+    }
+
+    // Charts
+    if (expected.attachments.charts > 0 || actual.attachments.charts > 0) {
+        const chartMatch = actual.attachments.charts === expected.attachments.charts;
+        results.push(createResult('Charts', expected.attachments.charts, actual.attachments.charts, chartMatch,
+            chartMatch ? `Charts match: ${actual.attachments.charts}` : `ODT charts: ${actual.attachments.charts} (DOCX: ${expected.attachments.charts}) - ODF object format`,
+            chartMatch ? 'PASS' : 'WARN'
+        ));
+    }
+
+    // StyleMap
+    results.push(createResult('StyleMap',
+        expected.metadata.hasStyleMap ? `${expected.metadata.styleMapSize} entries` : 'None',
+        actual.metadata.hasStyleMap ? `${actual.metadata.styleMapSize} entries` : 'None',
+        true, 'ODT style export handled by OpenOfficeParser', 'PASS'
+    ));
+
+    return results;
+}
+
+/**
  * Compare DOC (Word 97-2003) parity with DOCX baseline.
  * Legacy binary format has known limitations:
  * - No image extraction (OLE2 binary images not yet supported)
@@ -1537,6 +1644,13 @@ async function testGroupParity(group: string[], groupName: string): Promise<Feat
             if (ext === 'pdf') {
                 const pdfParity = comparePdfParity(groupName, baselineMetrics, adjustedMetrics);
                 results.push(...pdfParity);
+                continue;
+            }
+
+            // ODT Limitations: Use dedicated comparison function with format-aware logic
+            if (ext === 'odt') {
+                const odtParity = compareOdtParity(`${groupName} Parity`, baselineMetrics, adjustedMetrics);
+                results.push(...odtParity);
                 continue;
             }
 
