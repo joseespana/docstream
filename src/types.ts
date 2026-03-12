@@ -188,6 +188,9 @@ export interface SlideMetadata {
 
     /** The style of the slide. */
     style?: string;
+
+    /** Background fill information for the slide. */
+    background?: BackgroundInfo;
 }
 
 /**
@@ -384,6 +387,21 @@ export interface NoteMetadata {
 export interface HeaderFooterMetadata {
     /** Position: 'default', 'first', or 'even' */
     position: 'default' | 'first' | 'even';
+}
+
+/**
+ * Background information for slides, pages, or documents.
+ * Describes the background fill applied to a container element.
+ */
+export interface BackgroundInfo {
+    /** The type of background fill. */
+    fillType: 'solid' | 'image' | 'gradient' | 'pattern' | 'none';
+    /** Solid or primary color in hex format (#RRGGBB). */
+    color?: string;
+    /** Gradient stop colors in order, hex format (#RRGGBB). */
+    gradientColors?: string[];
+    /** Name of the image attachment (links to attachments array). Only present when extractAttachments is true. */
+    imageAttachment?: string;
 }
 
 /**
@@ -631,6 +649,8 @@ export interface OfficeMetadata {
     formatting?: Partial<TextFormatting>;
     /** Style map for styles in the document. */
     styleMap?: Record<string, Partial<TextFormatting>>;
+    /** Document-level background (e.g., DOCX page background). */
+    background?: BackgroundInfo;
 }
 
 /**
