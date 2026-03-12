@@ -157,3 +157,44 @@ export const parseOfficeMetadata = (xmlContent: string): OfficeMetadata => {
 
     return metadata;
 };
+
+/**
+ * Parses OOXML extended/app metadata from the docProps/app.xml file.
+ *
+ * This file contains application-specific metadata such as word count,
+ * character count, paragraph count, slide count, and the application
+ * that created the document.
+ *
+ * @param xmlContent - The raw XML content string from docProps/app.xml
+ * @returns A partial OfficeMetadata object with extracted properties
+ */
+export const parseAppMetadata = (xmlContent: string): Partial<OfficeMetadata> => {
+    const xml = parseXmlString(xmlContent);
+    const metadata: Partial<OfficeMetadata> = {};
+
+    const props = getElementsByTagName(xml, "Properties")[0];
+    if (!props) return metadata;
+
+    const pages = getElementsByTagName(props, "Pages")[0];
+    if (pages && pages.textContent) metadata.pages = parseInt(pages.textContent) || undefined;
+
+    const words = getElementsByTagName(props, "Words")[0];
+    if (words && words.textContent) metadata.wordCount = parseInt(words.textContent) || undefined;
+
+    const characters = getElementsByTagName(props, "Characters")[0];
+    if (characters && characters.textContent) metadata.characterCount = parseInt(characters.textContent) || undefined;
+
+    const paragraphs = getElementsByTagName(props, "Paragraphs")[0];
+    if (paragraphs && paragraphs.textContent) metadata.paragraphCount = parseInt(paragraphs.textContent) || undefined;
+
+    const slides = getElementsByTagName(props, "Slides")[0];
+    if (slides && slides.textContent) metadata.slideCount = parseInt(slides.textContent) || undefined;
+
+    const application = getElementsByTagName(props, "Application")[0];
+    if (application && application.textContent) metadata.application = application.textContent;
+
+    const appVersion = getElementsByTagName(props, "AppVersion")[0];
+    if (appVersion && appVersion.textContent) metadata.appVersion = appVersion.textContent;
+
+    return metadata;
+};

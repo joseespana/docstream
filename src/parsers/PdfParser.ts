@@ -414,6 +414,10 @@ export const parsePdf = async (buffer: Buffer, config: OfficeParserConfig): Prom
         if (e.message?.includes('workerSrc') || e.message?.includes('No "GlobalWorkerOptions.workerSrc" specified')) {
             throw getOfficeError(OfficeErrorType.PDF_WORKER_MISSING, config);
         }
+        // Detect encrypted/password-protected PDFs
+        if (e.name === 'PasswordException' || e.message?.includes('password')) {
+            throw getOfficeError(OfficeErrorType.FILE_ENCRYPTED, config, 'PDF');
+        }
         throw e;
     }
 

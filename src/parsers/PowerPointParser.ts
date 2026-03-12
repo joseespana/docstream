@@ -29,7 +29,7 @@ import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
 import { performOcr } from '../utils/ocrUtils';
-import { getElementsByTagName, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
+import { getElementsByTagName, parseAppMetadata, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
 import { extractFiles } from '../utils/zipUtils';
 
 /**
@@ -52,6 +52,7 @@ export const parsePowerPoint = async (buffer: Buffer, config: OfficeParserConfig
     const files = await extractFiles(buffer, x =>
         !!x.match(config.ignoreNotes ? slidesRegex : allFilesRegex) ||
         !!x.match(corePropsFileRegex) ||
+        x === 'docProps/app.xml' ||
         !!x.match(slideRelsRegex) ||
         (!!config.extractAttachments && (!!x.match(mediaFileRegex) || !!x.match(chartFileRegex)))
     );
@@ -59,6 +60,9 @@ export const parsePowerPoint = async (buffer: Buffer, config: OfficeParserConfig
     // Extract metadata
     const corePropsFile = files.find(f => f.path.match(corePropsFileRegex));
     const metadata = corePropsFile ? parseOfficeMetadata(corePropsFile.content.toString()) : {};
+
+    const appPropsFile = files.find(f => f.path === 'docProps/app.xml');
+    const appMetadata = appPropsFile ? parseAppMetadata(appPropsFile.content.toString()) : {};
 
     // Sort files
     files.sort((a, b) => {
@@ -708,6 +712,7 @@ export const parsePowerPoint = async (buffer: Buffer, config: OfficeParserConfig
         if (file.path.match(chartFileRegex)) continue;
         if (file.path.match(slideRelsRegex)) continue;
         if (file.path.match(corePropsFileRegex)) continue;
+        if (file.path === 'docProps/app.xml') continue;
 
         const xmlContentString = file.content.toString();
         const xml = parseXmlString(xmlContentString);
@@ -826,7 +831,7 @@ export const parsePowerPoint = async (buffer: Buffer, config: OfficeParserConfig
 
     return {
         type: 'pptx',
-        metadata: metadata,
+        metadata: { ...metadata, ...appMetadata },
         content: content,
         attachments: attachments,
         toText: () => content.map(c => {

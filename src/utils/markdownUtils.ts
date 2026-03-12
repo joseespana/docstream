@@ -8,7 +8,7 @@
  * @module markdownUtils
  */
 
-import { OfficeContentNode, HeadingMetadata, ListMetadata, ImageMetadata, ChartMetadata, SlideMetadata, SheetMetadata, PageMetadata, NoteMetadata, TextMetadata } from '../types';
+import { OfficeContentNode, HeadingMetadata, ListMetadata, ImageMetadata, ChartMetadata, SlideMetadata, SheetMetadata, PageMetadata, NoteMetadata, TextMetadata, HeaderFooterMetadata } from '../types';
 
 /**
  * Converts an array of OfficeContentNode into Markdown text.
@@ -59,6 +59,10 @@ function renderNode(node: OfficeContentNode, nl: string): string {
             return renderSheet(node, nl);
         case 'page':
             return renderPage(node, nl);
+        case 'header':
+            return renderHeaderFooter(node, nl, 'Header');
+        case 'footer':
+            return renderHeaderFooter(node, nl, 'Footer');
         case 'row':
         case 'cell':
             // These are handled by their parent (table)
@@ -338,6 +342,24 @@ function renderPage(node: OfficeContentNode, nl: string): string {
     }
 
     return parts.join(nl + nl);
+}
+
+/**
+ * Renders a header or footer node as a blockquote with a label.
+ */
+function renderHeaderFooter(node: OfficeContentNode, nl: string, label: string): string {
+    const parts: string[] = [];
+    if (node.children) {
+        for (const child of node.children) {
+            const rendered = renderNode(child, nl);
+            if (rendered !== '') {
+                parts.push(`> **${label}:** ${rendered}`);
+            }
+        }
+    } else if (node.text) {
+        parts.push(`> **${label}:** ${node.text}`);
+    }
+    return parts.join(nl);
 }
 
 /**

@@ -178,6 +178,20 @@ export class OfficeParser {
                 }
             }
 
+            // Detect encrypted OOXML files
+            // When a DOCX/XLSX/PPTX file is encrypted, it's stored as an OLE2 container
+            // The file extension says .docx but the magic bytes are OLE2 (D0 CF 11 E0)
+            const ooxmlExtensions = ['docx', 'xlsx', 'pptx'];
+            if (ooxmlExtensions.includes(ext)) {
+                if (buffer.length >= 8 &&
+                    buffer[0] === 0xD0 && buffer[1] === 0xCF &&
+                    buffer[2] === 0x11 && buffer[3] === 0xE0 &&
+                    buffer[4] === 0xA1 && buffer[5] === 0xB1 &&
+                    buffer[6] === 0x1A && buffer[7] === 0xE1) {
+                    throw getOfficeError(OfficeErrorType.FILE_ENCRYPTED, internalConfig, filePath || 'buffer');
+                }
+            }
+
             let result: OfficeParserAST;
             switch (ext) {
                 case 'docx':

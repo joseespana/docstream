@@ -1,6 +1,6 @@
 {
   "name": "@jose.espana/docstream",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A universal Node.js & Browser library to parse any office document — legacy or modern — into plain text, structured AST or Markdown. Supports DOCX, XLSX, PPTX, ODT, ODS, ODP, PDF, RTF and legacy formats DOC, XLS, PPT. Built for AI pipelines, RAG systems and document processing workflows.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

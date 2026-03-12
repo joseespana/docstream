@@ -60,12 +60,12 @@
  */
 
 import { XMLSerializer } from '@xmldom/xmldom';
-import { ChartMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
+import { CellMetadata, ChartMetadata, HeaderFooterMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
 import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
 import { performOcr } from '../utils/ocrUtils';
-import { getDirectChildren, getElementsByTagName, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
+import { getDirectChildren, getElementsByTagName, parseAppMetadata, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
 import { astToMarkdown } from '../utils/markdownUtils';
 import { extractFiles } from '../utils/zipUtils';
 
@@ -93,6 +93,8 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
     const mediaFileRegex = /(word\/)?media\/.*/;
     const chartFileRegex = /word\/charts\/chart\d+\.xml/;
     const chartRelsRegex = /word\/charts\/_rels\/chart\d+\.xml\.rels/;
+    const headerFileRegex = /word\/header\d+\.xml/;
+    const footerFileRegex = /word\/footer\d+\.xml/;
     const corePropsFileRegex = /docProps\/core[\d+]?.xml/;
     const relsFileRegex = /word\/_rels\/document[\d+]?.xml\.rels/;
     const stylesFileRegex = /word\/styles[\d+]?.xml/;
@@ -185,7 +187,10 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
         !!x.match(footnotesFileRegex) ||
         !!x.match(endnotesFileRegex) ||
         !!x.match(numberingFileRegex) ||
+        !!x.match(headerFileRegex) ||
+        !!x.match(footerFileRegex) ||
         !!x.match(corePropsFileRegex) ||
+        x === 'docProps/app.xml' ||
         !!x.match(relsFileRegex) ||
         !!x.match(stylesFileRegex) ||
         (!!config.extractAttachments && !!x.match(mediaFileRegex)) ||
@@ -196,6 +201,9 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
     // Extract metadata
     const corePropsFile = files.find(f => f.path.match(corePropsFileRegex));
     const metadata = corePropsFile ? parseOfficeMetadata(corePropsFile.content.toString()) : {};
+
+    const appPropsFile = files.find(f => f.path === 'docProps/app.xml');
+    const appMetadata = appPropsFile ? parseAppMetadata(appPropsFile.content.toString()) : {};
 
     const footnoteMap = new Map<string, OfficeContentNode[]>();
     const endnoteMap = new Map<string, OfficeContentNode[]>();
@@ -698,17 +706,49 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
         // Only get direct child rows, not nested table rows
         const trNodes = getDirectChildren(tblNode, "w:tr");
 
+        // Track vertical merges: key = grid column index, value = { startRow, node, count }
+        const vMergeState: Record<number, { startRow: number, node: OfficeContentNode, count: number }> = {};
+
         for (let rIndex = 0; rIndex < trNodes.length; rIndex++) {
             const trNode = trNodes[rIndex];
             const cells: OfficeContentNode[] = [];
             // Only get direct child cells, not nested table cells
             const tcNodes = getDirectChildren(trNode, "w:tc");
 
+            let gridCol = 0; // Track actual grid column position
+
             for (let cIndex = 0; cIndex < tcNodes.length; cIndex++) {
                 const tcNode = tcNodes[cIndex];
                 const cellChildren: OfficeContentNode[] = [];
                 let cellText = '';
 
+                // Check cell properties for merge info
+                const tcPr = getElementsByTagName(tcNode, "w:tcPr")[0];
+
+                // gridSpan for horizontal merge
+                let colSpan = 1;
+                if (tcPr) {
+                    const gridSpanNode = getElementsByTagName(tcPr, "w:gridSpan")[0];
+                    if (gridSpanNode) {
+                        colSpan = parseInt(gridSpanNode.getAttribute("w:val") || "1") || 1;
+                    }
+                }
+
+                // vMerge for vertical merge
+                let isVMergeStart = false;
+                let isVMergeContinue = false;
+                if (tcPr) {
+                    const vMergeNode = getElementsByTagName(tcPr, "w:vMerge")[0];
+                    if (vMergeNode) {
+                        const val = vMergeNode.getAttribute("w:val");
+                        if (val === "restart") {
+                            isVMergeStart = true;
+                        } else {
+                            // No val or val="continue" means continuation
+                            isVMergeContinue = true;
+                        }
+                    }
+                }
 
                 // Cells contain paragraphs (and other block-level elements)
                 const cellContentNodes = Array.from(tcNode.childNodes);
@@ -725,13 +765,28 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
                     }
                 }
 
+                const cellMeta: CellMetadata = { row: rIndex, col: cIndex };
+                if (colSpan > 1) cellMeta.colSpan = colSpan;
+
                 const cellNode: OfficeContentNode = {
                     type: 'cell',
                     text: cellText,
                     children: cellChildren,
-                    metadata: { row: rIndex, col: cIndex }
+                    metadata: cellMeta
                 };
+
+                // Handle vertical merge tracking
+                if (isVMergeStart) {
+                    vMergeState[gridCol] = { startRow: rIndex, node: cellNode, count: 1 };
+                } else if (isVMergeContinue && vMergeState[gridCol]) {
+                    vMergeState[gridCol].count++;
+                } else {
+                    // No vMerge - clear any previous state for this column
+                    delete vMergeState[gridCol];
+                }
+
                 cells.push(cellNode);
+                gridCol += colSpan; // Advance grid position by colSpan
             }
 
             const rowNode: OfficeContentNode = {
@@ -739,6 +794,14 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
                 children: cells
             };
             rows.push(rowNode);
+        }
+
+        // Apply rowSpan values to start cells
+        for (const col in vMergeState) {
+            const state = vMergeState[col];
+            if (state.count > 1) {
+                (state.node.metadata as CellMetadata).rowSpan = state.count;
+            }
         }
 
         return {
@@ -783,6 +846,10 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
         if (file.path.match(endnotesFileRegex)) continue;
         if (file.path.match(chartFileRegex)) continue;
         if (file.path.match(chartRelsRegex)) continue;
+        if (file.path.match(headerFileRegex)) continue;
+        if (file.path.match(footerFileRegex)) continue;
+        if (file.path === 'docProps/app.xml') continue;
+        if (file.path.match(corePropsFileRegex)) continue;
 
         const documentContent = file.content.toString();
         if (config.includeRawContent) {
@@ -803,6 +870,109 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
         }
     }
 
+
+    // Process headers and footers
+    // Build a map from relsMap target -> rId
+    const targetToRId: Record<string, string> = {};
+    for (const rId in relsMap) {
+        targetToRId[relsMap[rId]] = rId;
+    }
+
+    // Parse headerReference/footerReference from document.xml to get position types
+    const documentFile = files.find(f => f.path.match(documentFileRegex));
+    const headerRefs: Record<string, 'default' | 'first' | 'even'> = {};
+    const footerRefs: Record<string, 'default' | 'first' | 'even'> = {};
+
+    if (documentFile) {
+        const docXml = parseXmlString(documentFile.content.toString());
+        const sectPr = getElementsByTagName(docXml, "w:sectPr");
+        for (const sect of sectPr) {
+            const hRefs = getElementsByTagName(sect, "w:headerReference");
+            for (const ref of hRefs) {
+                const rId = ref.getAttribute("r:id");
+                const type = ref.getAttribute("w:type") as 'default' | 'first' | 'even' || 'default';
+                if (rId) headerRefs[rId] = type;
+            }
+            const fRefs = getElementsByTagName(sect, "w:footerReference");
+            for (const ref of fRefs) {
+                const rId = ref.getAttribute("r:id");
+                const type = ref.getAttribute("w:type") as 'default' | 'first' | 'even' || 'default';
+                if (rId) footerRefs[rId] = type;
+            }
+        }
+    }
+
+    // Process header and footer files
+    const headerNodes: OfficeContentNode[] = [];
+    const footerNodes: OfficeContentNode[] = [];
+
+    for (const file of files) {
+        if (file.path.match(headerFileRegex)) {
+            const xml = parseXmlString(file.content.toString());
+            const children: OfficeContentNode[] = [];
+            const bodyNodes = Array.from(xml.documentElement.childNodes);
+            for (const child of bodyNodes) {
+                if (child.nodeName === 'w:p') {
+                    children.push(parseParagraph(child as Element));
+                } else if (child.nodeName === 'w:tbl') {
+                    children.push(parseTable(child as Element));
+                }
+            }
+
+            if (children.length > 0) {
+                const filename = file.path.split('/').pop() || '';
+                let position: 'default' | 'first' | 'even' = 'default';
+                for (const rId in relsMap) {
+                    if (relsMap[rId].endsWith(filename)) {
+                        if (headerRefs[rId]) position = headerRefs[rId];
+                        break;
+                    }
+                }
+
+                headerNodes.push({
+                    type: 'header',
+                    text: children.map(c => c.text).filter(Boolean).join(' '),
+                    children,
+                    metadata: { position } as HeaderFooterMetadata
+                });
+            }
+        }
+
+        if (file.path.match(footerFileRegex)) {
+            const xml = parseXmlString(file.content.toString());
+            const children: OfficeContentNode[] = [];
+            const bodyNodes = Array.from(xml.documentElement.childNodes);
+            for (const child of bodyNodes) {
+                if (child.nodeName === 'w:p') {
+                    children.push(parseParagraph(child as Element));
+                } else if (child.nodeName === 'w:tbl') {
+                    children.push(parseTable(child as Element));
+                }
+            }
+
+            if (children.length > 0) {
+                const filename = file.path.split('/').pop() || '';
+                let position: 'default' | 'first' | 'even' = 'default';
+                for (const rId in relsMap) {
+                    if (relsMap[rId].endsWith(filename)) {
+                        if (footerRefs[rId]) position = footerRefs[rId];
+                        break;
+                    }
+                }
+
+                footerNodes.push({
+                    type: 'footer',
+                    text: children.map(c => c.text).filter(Boolean).join(' '),
+                    children,
+                    metadata: { position } as HeaderFooterMetadata
+                });
+            }
+        }
+    }
+
+    // Insert: headers at beginning, footers at end
+    content.unshift(...headerNodes);
+    content.push(...footerNodes);
 
     // Extract attachments
     if (config.extractAttachments) {
@@ -874,7 +1044,7 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
 
     return {
         type: 'docx',
-        metadata: { ...metadata, formatting: docDefaults, styleMap: styleMap },
+        metadata: { ...metadata, ...appMetadata, formatting: docDefaults, styleMap: styleMap },
         content: content,
         attachments: attachments,
         toText: () => content.map(c => {
