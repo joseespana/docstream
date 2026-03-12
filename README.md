@@ -335,6 +335,9 @@ npx docstream /path/to/file.docx --toMarkdown=true
 | Slides (PPTX/ODP) | `---` separators + `### Slide N` headings |
 | Sheets (XLSX/ODS) | `## SheetName` headings |
 | Pages (PDF) | `<!-- Page N -->` comments |
+| Headers / Footers (DOCX) | `> **Header:** content` / `> **Footer:** content` |
+| Merged cells (DOCX/XLSX) | `rowSpan` / `colSpan` in cell metadata |
+| Hyperlinks (XLSX) | `[text](url)` via `TextMetadata.link` |
 
 ### Example Output
 
@@ -527,6 +530,11 @@ const ast2 = await docstream.parseOffice(file, {
 - [x] Legacy `.doc` support (Word 97-2003 Binary)
 - [x] Legacy `.xls` support (Excel BIFF8)
 - [x] Legacy `.ppt` support (PowerPoint 97-2003 Binary)
+- [x] Merged cells support (DOCX `gridSpan`/`vMerge` + XLSX `mergeCells`)
+- [x] DOCX headers/footers extraction
+- [x] XLSX hyperlink extraction
+- [x] Extended OOXML metadata (`wordCount`, `characterCount`, `paragraphCount`, `slideCount`, `application`, `appVersion`)
+- [x] Encryption detection (OOXML OLE2-wrapped + PDF password-protected)
 - [ ] Fix: `process is not defined` in browser environments ([issue #67](https://github.com/joseespana/docstream/issues/67))
 - [ ] Fix: background process leak on top-level require ([issue #59](https://github.com/joseespana/docstream/issues/59))
 - [ ] Page numbers in Word documents ([issue #71](https://github.com/joseespana/docstream/issues/71))

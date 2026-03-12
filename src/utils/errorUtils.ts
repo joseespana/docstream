@@ -31,7 +31,9 @@ export enum OfficeErrorType {
     /** Input type is not a supported type (string, Buffer, ArrayBuffer) */
     INVALID_INPUT = 'INVALID_INPUT',
     /** PDF worker source is missing (required in browser) */
-    PDF_WORKER_MISSING = 'PDF_WORKER_MISSING'
+    PDF_WORKER_MISSING = 'PDF_WORKER_MISSING',
+    /** File is encrypted or password-protected */
+    FILE_ENCRYPTED = 'FILE_ENCRYPTED'
 }
 
 /** 
@@ -46,7 +48,8 @@ const ERROR_MESSAGES: Record<OfficeErrorType, string | ((...args: any[]) => stri
     [OfficeErrorType.IMPROPER_ARGUMENTS]: `Improper arguments`,
     [OfficeErrorType.IMPROPER_BUFFERS]: `Error occured while reading the file buffers`,
     [OfficeErrorType.INVALID_INPUT]: `Invalid input type: Expected a Buffer or a valid file path`,
-    [OfficeErrorType.PDF_WORKER_MISSING]: `Missing PDF worker configuration. PDF parsing in browser environments requires a worker source. Please provide "pdfWorkerSrc" in your configuration.`
+    [OfficeErrorType.PDF_WORKER_MISSING]: `Missing PDF worker configuration. PDF parsing in browser environments requires a worker source. Please provide "pdfWorkerSrc" in your configuration.`,
+    [OfficeErrorType.FILE_ENCRYPTED]: (filepath: string) => `File ${filepath || 'provided'} appears to be encrypted or password-protected. OfficeParser cannot parse encrypted files. Please remove the password protection and try again.`
 };
 
 /**

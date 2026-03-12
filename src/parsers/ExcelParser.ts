@@ -22,14 +22,25 @@
  * @see https://www.ecma-international.org/publications-and-standards/standards/ecma-376/
  */
 
-import { ChartMetadata, ImageMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting } from '../types';
+import { CellMetadata, ChartMetadata, ImageMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
 import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
 import { performOcr } from '../utils/ocrUtils';
 import { astToMarkdown } from '../utils/markdownUtils';
-import { getElementsByTagName, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
+import { getElementsByTagName, parseAppMetadata, parseOfficeMetadata, parseXmlString } from '../utils/xmlUtils';
 import { extractFiles } from '../utils/zipUtils';
+
+/**
+ * Converts an Excel column letter string (e.g., "A", "Z", "AA", "AZ") to a 0-based column index.
+ */
+const colLetterToIndex = (colStr: string): number => {
+    let result = 0;
+    for (let i = 0; i < colStr.length; i++) {
+        result = result * 26 + (colStr.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+    }
+    return result - 1;
+};
 
 /**
  * Parses an Excel spreadsheet (.xlsx) and extracts sheets, rows, and cells.
@@ -58,7 +69,9 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
         x === 'xl/workbook.xml' ||
         x === 'xl/_rels/workbook.xml.rels' ||
         !!x.match(corePropsFileRegex) ||
-        (!!config.extractAttachments && (!!x.match(mediaFileRegex) || !!x.match(relsRegex) || !!x.match(drawingRelsRegex)))
+        x === 'docProps/app.xml' ||
+        !!x.match(relsRegex) ||
+        (!!config.extractAttachments && (!!x.match(mediaFileRegex) || !!x.match(drawingRelsRegex)))
     );
 
     const sharedStringsFile = files.find(f => f.path === stringsFilePath);
@@ -423,15 +436,33 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
         if (file.path.match(chartsRegex)) continue;
         if (file.path.match(relsRegex)) continue;
         if (file.path.match(drawingRelsRegex)) continue;
+        if (file.path.match(corePropsFileRegex)) continue;
+        if (file.path === 'docProps/app.xml') continue;
 
         if (file.path.match(sheetsRegex)) {
             if (config.includeRawContent) {
                 rawContents.push(file.content.toString());
             }
 
+            // Parse merged cells for this sheet
+            const sheetXmlStr = file.content.toString();
+            const mergeMap: Record<string, { rowSpan: number, colSpan: number }> = {};
+            const mergeCellRegex = /<mergeCell\s+ref="([A-Z]+)(\d+):([A-Z]+)(\d+)"\s*\/>/g;
+            let mergeCellMatch;
+            while ((mergeCellMatch = mergeCellRegex.exec(sheetXmlStr)) !== null) {
+                const startCol = mergeCellMatch[1];
+                const startRow = parseInt(mergeCellMatch[2]);
+                const endCol = mergeCellMatch[3];
+                const endRow = parseInt(mergeCellMatch[4]);
+                const colSpan = colLetterToIndex(endCol) - colLetterToIndex(startCol) + 1;
+                const rowSpan = endRow - startRow + 1;
+                const key = startCol + startRow;
+                mergeMap[key] = { rowSpan, colSpan };
+            }
+
             const rows: OfficeContentNode[] = [];
             const rowRegex = /<row.*?>[\s\S]*?<\/row>/g;
-            const rowMatches = file.content.toString().match(rowRegex);
+            const rowMatches = sheetXmlStr.match(rowRegex);
 
             if (rowMatches) {
                 for (const rowXml of rowMatches) {
@@ -474,7 +505,7 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
                             // Parse cell coordinate
                             const coordMatch = cXml.match(/r="([A-Z]+)(\d+)"/);
                             const colStr = coordMatch ? coordMatch[1] : '';
-                            const colIndex = colStr.charCodeAt(0) - 'A'.charCodeAt(0);
+                            const colIndex = colStr ? colLetterToIndex(colStr) : 0;
 
                             if (text || cellNodes.length > 0) {
                                 // Extract cell style index
@@ -505,11 +536,18 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
                                     });
                                 }
 
+                                const cellCoord = colStr + (coordMatch ? coordMatch[2] : '');
+                                const cellMeta: CellMetadata = { row: rowIndex, col: colIndex };
+                                if (cellCoord && mergeMap[cellCoord]) {
+                                    const merge = mergeMap[cellCoord];
+                                    if (merge.colSpan > 1) cellMeta.colSpan = merge.colSpan;
+                                    if (merge.rowSpan > 1) cellMeta.rowSpan = merge.rowSpan;
+                                }
                                 const cellNode: OfficeContentNode = {
                                     type: 'cell',
                                     text: text,
                                     children: cellNodes,
-                                    metadata: { row: rowIndex, col: colIndex }
+                                    metadata: cellMeta
                                 };
                                 if (config.includeRawContent) {
                                     cellNode.rawContent = cXml;
@@ -529,6 +567,83 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
                             rowNode.rawContent = rowXml;
                         }
                         rows.push(rowNode);
+                    }
+                }
+            }
+
+            // Parse and apply hyperlinks from the worksheet XML
+            const sheetXml = parseXmlString(sheetXmlStr);
+            const hyperlinkNodes = getElementsByTagName(sheetXml, "hyperlink");
+
+            if (hyperlinkNodes.length > 0) {
+                // Get sheet rels for resolving rIds to external URLs
+                const sheetFilenameHL = file.path.split('/').pop() || '';
+                const relsFilenameHL = `xl/worksheets/_rels/${sheetFilenameHL}.rels`;
+                const relsFileHL = files.find(f => f.path === relsFilenameHL);
+                const sheetRels: Record<string, string> = {};
+
+                if (relsFileHL) {
+                    const relsXml = parseXmlString(relsFileHL.content.toString());
+                    const rels = getElementsByTagName(relsXml, "Relationship");
+                    for (const rel of rels) {
+                        const id = rel.getAttribute("Id");
+                        const target = rel.getAttribute("Target");
+                        if (id && target) sheetRels[id] = target;
+                    }
+                }
+
+                // Build hyperlink map keyed by "row,col" (0-based)
+                const hlMap: Record<string, { link: string, linkType: 'internal' | 'external' }> = {};
+
+                for (const hlNode of hyperlinkNodes) {
+                    const ref = hlNode.getAttribute("ref");
+                    if (!ref) continue;
+
+                    const rId = hlNode.getAttribute("r:id");
+                    const location = hlNode.getAttribute("location");
+
+                    let link: string | undefined;
+                    let linkType: 'internal' | 'external' | undefined;
+
+                    if (rId && sheetRels[rId]) {
+                        link = sheetRels[rId];
+                        linkType = 'external';
+                    } else if (location) {
+                        link = location;
+                        linkType = 'internal';
+                    }
+
+                    if (link && linkType) {
+                        // Convert ref like "A1" to row,col (0-based)
+                        const refMatch = ref.match(/^([A-Z]+)(\d+)$/);
+                        if (refMatch) {
+                            const colIdx = colLetterToIndex(refMatch[1]);
+                            const rowIdx = parseInt(refMatch[2]) - 1;
+                            hlMap[`${rowIdx},${colIdx}`] = { link, linkType };
+                        }
+                    }
+                }
+
+                // Apply hyperlinks to existing cell text nodes
+                for (const rowNode of rows) {
+                    if (rowNode.children) {
+                        for (const cellNode of rowNode.children) {
+                            if (cellNode.type === 'cell' && cellNode.metadata) {
+                                const meta = cellNode.metadata as CellMetadata;
+                                const key = `${meta.row},${meta.col}`;
+                                if (hlMap[key] && cellNode.children) {
+                                    for (const child of cellNode.children) {
+                                        if (child.type === 'text') {
+                                            child.metadata = {
+                                                ...(child.metadata || {}),
+                                                link: hlMap[key].link,
+                                                linkType: hlMap[key].linkType
+                                            } as TextMetadata;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -625,6 +740,9 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
     const corePropsFile = files.find(f => f.path.match(corePropsFileRegex));
     const metadata = corePropsFile ? parseOfficeMetadata(corePropsFile.content.toString()) : {};
 
+    const appPropsFile = files.find(f => f.path === 'docProps/app.xml');
+    const appMetadata = appPropsFile ? parseAppMetadata(appPropsFile.content.toString()) : {};
+
     // Link OCR text and chart data to content nodes (like PPTX parser)
     const assignAttachmentData = (nodes: OfficeContentNode[]) => {
         for (const node of nodes) {
@@ -659,7 +777,7 @@ export const parseExcel = async (buffer: Buffer, config: OfficeParserConfig): Pr
 
     return {
         type: 'xlsx',
-        metadata: metadata,
+        metadata: { ...metadata, ...appMetadata },
         content: content,
         attachments: attachments,
         toText: () => content.map(c => {

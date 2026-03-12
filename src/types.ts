@@ -68,7 +68,7 @@ export type SupportedFileType = 'docx' | 'pptx' | 'xlsx' | 'odt' | 'odp' | 'ods'
 /**
  * Types of content nodes in the AST.
  */
-export type OfficeContentNodeType = 'paragraph' | 'heading' | 'table' | 'list' | 'text' | 'image' | 'chart' | 'drawing' | 'slide' | 'note' | 'sheet' | 'row' | 'cell' | 'page';
+export type OfficeContentNodeType = 'paragraph' | 'heading' | 'table' | 'list' | 'text' | 'image' | 'chart' | 'drawing' | 'slide' | 'note' | 'sheet' | 'row' | 'cell' | 'page' | 'header' | 'footer';
 
 /**
  * Supported MIME types for attachments.
@@ -379,9 +379,17 @@ export interface NoteMetadata {
 }
 
 /**
+ * Metadata for header/footer nodes in DOCX documents.
+ */
+export interface HeaderFooterMetadata {
+    /** Position: 'default', 'first', or 'even' */
+    position: 'default' | 'first' | 'even';
+}
+
+/**
  * Union type for content metadata.
  */
-export type ContentMetadata = SlideMetadata | SheetMetadata | HeadingMetadata | ListMetadata | CellMetadata | ImageMetadata | ChartMetadata | PageMetadata | ParagraphMetadata | TextMetadata | NoteMetadata | undefined;
+export type ContentMetadata = SlideMetadata | SheetMetadata | HeadingMetadata | ListMetadata | CellMetadata | ImageMetadata | ChartMetadata | PageMetadata | ParagraphMetadata | TextMetadata | NoteMetadata | HeaderFooterMetadata | undefined;
 
 
 /**
@@ -607,6 +615,18 @@ export interface OfficeMetadata {
     subject?: string;
     /** Number of pages (if available). */
     pages?: number;
+    /** Word count from document statistics. */
+    wordCount?: number;
+    /** Character count from document statistics. */
+    characterCount?: number;
+    /** Paragraph count from document statistics. */
+    paragraphCount?: number;
+    /** Slide count (PowerPoint). */
+    slideCount?: number;
+    /** Application that created the document. */
+    application?: string;
+    /** Application version. */
+    appVersion?: string;
     /** Document-wide default formatting settings (font, size, color). */
     formatting?: Partial<TextFormatting>;
     /** Style map for styles in the document. */
