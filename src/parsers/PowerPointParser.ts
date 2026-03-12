@@ -23,7 +23,7 @@
  */
 
 import { XMLSerializer } from '@xmldom/xmldom';
-import { ChartMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, SlideMetadata, TextFormatting } from '../types';
+import { BackgroundInfo, ChartMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, SlideMetadata, TextFormatting } from '../types';
 import { astToMarkdown } from '../utils/markdownUtils';
 import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
@@ -735,6 +735,99 @@ export const parsePowerPoint = async (buffer: Buffer, config: OfficeParserConfig
 
         if (config.includeRawContent) {
             slideNode.rawContent = file.content.toString();
+        }
+
+        // Extract slide background (p:bg)
+        if (!isNote) {
+            const bg = getElementsByTagName(xml, "p:bg")[0];
+            if (bg) {
+                const bgPr = getElementsByTagName(bg, "p:bgPr")[0];
+                if (bgPr) {
+                    const background: BackgroundInfo = { fillType: 'none' };
+
+                    // Solid fill
+                    const solidFill = getElementsByTagName(bgPr, "a:solidFill")[0];
+                    if (solidFill) {
+                        background.fillType = 'solid';
+                        const srgbClr = getElementsByTagName(solidFill, "a:srgbClr")[0];
+                        if (srgbClr) {
+                            const val = srgbClr.getAttribute("val");
+                            if (val) background.color = '#' + val;
+                        }
+                    }
+
+                    // Image fill (blipFill)
+                    const blipFill = getElementsByTagName(bgPr, "a:blipFill")[0];
+                    if (blipFill) {
+                        background.fillType = 'image';
+                        const blip = getElementsByTagName(blipFill, "a:blip")[0];
+                        if (blip) {
+                            const rId = blip.getAttribute("r:embed");
+                            if (rId && slideRelsMap[slideNumber]?.[rId]) {
+                                background.imageAttachment = slideRelsMap[slideNumber][rId].target;
+                            }
+                        }
+                    }
+
+                    // Gradient fill
+                    const gradFill = getElementsByTagName(bgPr, "a:gradFill")[0];
+                    if (gradFill) {
+                        background.fillType = 'gradient';
+                        const gsLst = getElementsByTagName(gradFill, "a:gsLst")[0];
+                        if (gsLst) {
+                            const stops = getElementsByTagName(gsLst, "a:gs");
+                            const colors: string[] = [];
+                            for (const gs of stops) {
+                                const srgbClr = getElementsByTagName(gs, "a:srgbClr")[0];
+                                if (srgbClr) {
+                                    const val = srgbClr.getAttribute("val");
+                                    if (val) colors.push('#' + val);
+                                }
+                            }
+                            if (colors.length > 0) background.gradientColors = colors;
+                        }
+                    }
+
+                    // Pattern fill
+                    const pattFill = getElementsByTagName(bgPr, "a:pattFill")[0];
+                    if (pattFill) {
+                        background.fillType = 'pattern';
+                        const fgClr = getElementsByTagName(pattFill, "a:fgClr")[0];
+                        if (fgClr) {
+                            const srgbClr = getElementsByTagName(fgClr, "a:srgbClr")[0];
+                            if (srgbClr) {
+                                const val = srgbClr.getAttribute("val");
+                                if (val) background.color = '#' + val;
+                            }
+                        }
+                    }
+
+                    // No fill
+                    const noFill = getElementsByTagName(bgPr, "a:noFill")[0];
+                    if (noFill) {
+                        background.fillType = 'none';
+                    }
+
+                    if (background.fillType !== 'none') {
+                        (slideNode.metadata as SlideMetadata).background = background;
+                    }
+                }
+
+                // Background reference (p:bgRef) - theme-based solid color
+                const bgRef = getElementsByTagName(bg, "p:bgRef")[0];
+                if (bgRef && !bgPr) {
+                    const srgbClr = getElementsByTagName(bgRef, "a:srgbClr")[0];
+                    if (srgbClr) {
+                        const val = srgbClr.getAttribute("val");
+                        if (val) {
+                            (slideNode.metadata as SlideMetadata).background = {
+                                fillType: 'solid',
+                                color: '#' + val
+                            };
+                        }
+                    }
+                }
+            }
         }
 
         /**

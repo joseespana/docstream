@@ -21,7 +21,7 @@
  * @module OpenOfficeParser
  */
 
-import { CellMetadata, ChartData, ChartMetadata, HeadingMetadata, ImageMetadata, ListMetadata, NoteMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, SheetMetadata, SlideMetadata, SupportedFileType, TextFormatting, TextMetadata } from '../types';
+import { BackgroundInfo, CellMetadata, ChartData, ChartMetadata, HeadingMetadata, ImageMetadata, ListMetadata, NoteMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, SheetMetadata, SlideMetadata, SupportedFileType, TextFormatting, TextMetadata } from '../types';
 import { astToMarkdown } from '../utils/markdownUtils';
 import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
@@ -73,6 +73,7 @@ export const parseOpenOffice = async (buffer: Buffer, config: OfficeParserConfig
     // Inline style parsing (from content.xml automatic styles)
     const styleMap: { [key: string]: TextFormatting } = {};
     const paragraphStyleMap: { [key: string]: { alignment?: 'left' | 'center' | 'right' | 'justify', dropCap?: boolean } } = {};
+    const drawingPageStyleMap: { [key: string]: BackgroundInfo } = {};
     const listCounters: { [listId: string]: { [level: string]: number } } = {}; // Track item index per listId/level
 
     // Helper to parse styles
@@ -82,6 +83,32 @@ export const parseOpenOffice = async (buffer: Buffer, config: OfficeParserConfig
         for (const style of styles) {
             const name = style.getAttribute("style:name");
             if (!name) continue;
+
+            // Parse drawing-page-properties for slide/page backgrounds (ODP)
+            const drawPageProps = getElementsByTagName(style, "style:drawing-page-properties")[0];
+            if (drawPageProps) {
+                const fill = drawPageProps.getAttribute("draw:fill");
+                if (fill && fill !== 'none') {
+                    const bg: BackgroundInfo = { fillType: 'none' };
+                    if (fill === 'solid') {
+                        bg.fillType = 'solid';
+                        const fillColor = drawPageProps.getAttribute("draw:fill-color");
+                        if (fillColor) bg.color = fillColor;
+                    } else if (fill === 'bitmap') {
+                        bg.fillType = 'image';
+                        // Image name reference (links to draw:fill-image-name in styles)
+                        const imgName = drawPageProps.getAttribute("draw:fill-image-name");
+                        if (imgName) bg.imageAttachment = imgName;
+                    } else if (fill === 'gradient') {
+                        bg.fillType = 'gradient';
+                        const gradName = drawPageProps.getAttribute("draw:fill-gradient-name");
+                        if (gradName) bg.color = gradName; // Store gradient reference name
+                    }
+                    if (bg.fillType !== 'none') {
+                        drawingPageStyleMap[name] = bg;
+                    }
+                }
+            }
 
             const styleInfo: { alignment?: 'left' | 'center' | 'right' | 'justify', dropCap?: boolean } = {};
 
@@ -607,6 +634,31 @@ export const parseOpenOffice = async (buffer: Buffer, config: OfficeParserConfig
 
                 if (Object.keys(styleInfo).length > 0) {
                     paragraphStyleMap[name] = styleInfo;
+                }
+
+                // Parse drawing-page-properties for slide backgrounds (automatic styles in content.xml)
+                const drawPageProps = getElementsByTagName(style, "style:drawing-page-properties")[0];
+                if (drawPageProps) {
+                    const fill = drawPageProps.getAttribute("draw:fill");
+                    if (fill && fill !== 'none') {
+                        const bg: BackgroundInfo = { fillType: 'none' };
+                        if (fill === 'solid') {
+                            bg.fillType = 'solid';
+                            const fillColor = drawPageProps.getAttribute("draw:fill-color");
+                            if (fillColor) bg.color = fillColor;
+                        } else if (fill === 'bitmap') {
+                            bg.fillType = 'image';
+                            const imgName = drawPageProps.getAttribute("draw:fill-image-name");
+                            if (imgName) bg.imageAttachment = imgName;
+                        } else if (fill === 'gradient') {
+                            bg.fillType = 'gradient';
+                            const gradName = drawPageProps.getAttribute("draw:fill-gradient-name");
+                            if (gradName) bg.color = gradName;
+                        }
+                        if (bg.fillType !== 'none') {
+                            drawingPageStyleMap[name] = bg;
+                        }
+                    }
                 }
 
                 const textProps = getElementsByTagName(style, "style:text-properties")[0];
@@ -1164,10 +1216,18 @@ export const parseOpenOffice = async (buffer: Buffer, config: OfficeParserConfig
 
                 for (let i = 0; i < pages.length; i++) {
                     const page = pages[i];
+                    const slideMeta: SlideMetadata = { slideNumber: i + 1 };
+
+                    // Apply slide background from drawing-page style
+                    const drawStyleName = (page as Element).getAttribute("draw:style-name");
+                    if (drawStyleName && drawingPageStyleMap[drawStyleName]) {
+                        slideMeta.background = drawingPageStyleMap[drawStyleName];
+                    }
+
                     const slideNode: OfficeContentNode = {
                         type: 'slide',
                         children: [],
-                        metadata: { slideNumber: i + 1 } as SlideMetadata
+                        metadata: slideMeta
                     };
 
                     // Separate page content and notes

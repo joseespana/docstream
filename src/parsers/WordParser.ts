@@ -60,7 +60,7 @@
  */
 
 import { XMLSerializer } from '@xmldom/xmldom';
-import { CellMetadata, ChartMetadata, HeaderFooterMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
+import { BackgroundInfo, CellMetadata, ChartMetadata, HeaderFooterMetadata, ImageMetadata, ListMetadata, OfficeAttachment, OfficeContentNode, OfficeParserAST, OfficeParserConfig, TextFormatting, TextMetadata } from '../types';
 import { extractChartData } from '../utils/chartUtils';
 import { logWarning } from '../utils/errorUtils';
 import { createAttachment } from '../utils/imageUtils';
@@ -350,6 +350,7 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
     const rawContents: string[] = [];
     const numberingState: { [key: string]: { [key: string]: number } } = {};
     const listCounters: { [key: string]: { [key: string]: number } } = {}; // Track item index per listId/level
+    let docBackground: BackgroundInfo | undefined;
 
     // Helper to parse a paragraph node
     const parseParagraph = (pNode: Element): OfficeContentNode => {
@@ -868,6 +869,26 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
                 }
             }
         }
+
+        // Extract document background (w:background)
+        const bgElement = getElementsByTagName(doc, "w:background")[0];
+        if (bgElement) {
+            const bgColor = bgElement.getAttribute("w:color");
+            if (bgColor && bgColor !== 'auto') {
+                docBackground = { fillType: 'solid', color: '#' + bgColor };
+            }
+            // Check for background image via v:background/v:fill
+            const vFill = getElementsByTagName(bgElement, "v:fill")[0];
+            if (vFill) {
+                const rId = vFill.getAttribute("r:id");
+                if (rId && relsMap[rId]) {
+                    docBackground = { fillType: 'image', imageAttachment: relsMap[rId].split('/').pop() || '' };
+                    if (bgColor && bgColor !== 'auto') {
+                        docBackground.color = '#' + bgColor;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -1044,7 +1065,7 @@ export const parseWord = async (buffer: Buffer, config: OfficeParserConfig): Pro
 
     return {
         type: 'docx',
-        metadata: { ...metadata, ...appMetadata, formatting: docDefaults, styleMap: styleMap },
+        metadata: { ...metadata, ...appMetadata, formatting: docDefaults, styleMap: styleMap, ...(docBackground ? { background: docBackground } : {}) },
         content: content,
         attachments: attachments,
         toText: () => content.map(c => {
