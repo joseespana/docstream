@@ -44,11 +44,9 @@ jobs:
           echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
 
       - name: Upload Bundle as Release Asset
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/${{ env.BUNDLE_NAME }}
+        run: gh release upload "${{ github.event.release.tag_name }}" "dist/${{ env.BUNDLE_NAME }}" --clobber
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to npm
         run: npm publish --access public
